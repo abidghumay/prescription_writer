@@ -1,0 +1,264 @@
+[
+  {
+    "brand_name": "Napa",
+    "generic_name": "Paracetamol",
+    "manufacturer_name": "Beximco Pharmaceuticals Ltd.",
+    "strength": "500 mg",
+    "dosage_form": "Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 1.20,
+    "synonyms": "Acetaminophen"
+  },
+  {
+    "brand_name": "Napa Extra",
+    "generic_name": "Paracetamol + Caffeine",
+    "manufacturer_name": "Beximco Pharmaceuticals Ltd.",
+    "strength": "500 mg + 65 mg",
+    "dosage_form": "Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 2.50
+  },
+  {
+    "brand_name": "Napa Extend",
+    "generic_name": "Paracetamol",
+    "manufacturer_name": "Beximco Pharmaceuticals Ltd.",
+    "strength": "665 mg",
+    "dosage_form": "Extended Release Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 2.00
+  },
+  {
+    "brand_name": "Napa Syrup",
+    "generic_name": "Paracetamol",
+    "manufacturer_name": "Beximco Pharmaceuticals Ltd.",
+    "strength": "120 mg/5 ml",
+    "dosage_form": "Syrup",
+    "route": "Oral",
+    "pack_price_bdt": 35.00
+  },
+  {
+    "brand_name": "Ace",
+    "generic_name": "Paracetamol",
+    "manufacturer_name": "Square Pharmaceuticals Ltd.",
+    "strength": "500 mg",
+    "dosage_form": "Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 1.20
+  },
+  {
+    "brand_name": "Ace Plus",
+    "generic_name": "Paracetamol + Caffeine",
+    "manufacturer_name": "Square Pharmaceuticals Ltd.",
+    "strength": "500 mg + 65 mg",
+    "dosage_form": "Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 2.50
+  },
+  {
+    "brand_name": "Fast",
+    "generic_name": "Paracetamol",
+    "manufacturer_name": "The Acme Laboratories Ltd.",
+    "strength": "500 mg",
+    "dosage_form": "Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 1.20
+  },
+  {
+    "brand_name": "Renova",
+    "generic_name": "Paracetamol",
+    "manufacturer_name": "Opsonin Pharma Ltd.",
+    "strength": "500 mg",
+    "dosage_form": "Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 1.20
+  },
+  {
+    "brand_name": "Seclo",
+    "generic_name": "Omeprazole",
+    "manufacturer_name": "Square Pharmaceuticals Ltd.",
+    "strength": "20 mg",
+    "dosage_form": "Capsule",
+    "route": "Oral",
+    "pack_price_bdt": 6.00
+  },
+  {
+    "brand_name": "Seclo 40",
+    "generic_name": "Omeprazole",
+    "manufacturer_name": "Square Pharmaceuticals Ltd.",
+    "strength": "40 mg",
+    "dosage_form": "Capsule",
+    "route": "Oral",
+    "pack_price_bdt": 10.00
+  },
+  {
+    "brand_name": "Losectil",
+    "generic_name": "Omeprazole",
+    "manufacturer_name": "Eskayef Pharmaceuticals Ltd.",
+    "strength": "20 mg",
+    "dosage_form": "Capsule",
+    "route": "Oral",
+    "pack_price_bdt": 6.00
+  },
+  {
+    "brand_name": "Omep",
+    "generic_name": "Omeprazole",
+    "manufacturer_name": "Beximco Pharmaceuticals Ltd.",
+    "strength": "20 mg",
+    "dosage_form": "Capsule",
+    "route": "Oral",
+    "pack_price_bdt": 6.00
+  },
+  {
+    "brand_name": "Sergel",
+    "generic_name": "Esomeprazole",
+    "manufacturer_name": "Healthcare Pharmaceuticals Ltd.",
+    "strength": "20 mg",
+    "dosage_form": "Capsule",
+    "route": "Oral",
+    "pack_price_bdt": 7.00
+  },
+  {
+    "brand_name": "Maxpro",
+    "generic_name": "Esomeprazole",
+    "manufacturer_name": "Square Pharmaceuticals Ltd.",
+    "strength": "20 mg",
+    "dosage_form": "Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 7.00
+  },
+  {
+    "brand_name": "Finix",
+    "generic_name": "Esomeprazole",
+    "manufacturer_name": "Opsonin Pharma Ltd.",
+    "strength": "20 mg",
+    "dosage_form": "Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 7.00
+  },
+  {
+    "brand_name": "Ciprocin",
+    "generic_name": "Ciprofloxacin",
+    "manufacturer_name": "Square Pharmaceuticals Ltd.",
+    "strength": "500 mg",
+    "dosage_form": "Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 14.00
+  },
+  {
+    "brand_name": "Neoflox",
+    "generic_name": "Ciprofloxacin",
+    "manufacturer_name": "Beximco Pharmaceuticals Ltd.",
+    "strength": "500 mg",
+    "dosage_form": "Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 14.00
+  },
+  {
+    "brand_name": "Moxacil",
+    "generic_name": "Amoxicillin",
+    "manufacturer_name": "Square Pharmaceuticals Ltd.",
+    "strength": "500 mg",
+    "dosage_form": "Capsule",
+    "route": "Oral",
+    "pack_price_bdt": 7.50
+  },
+  {
+    "brand_name": "Tycil",
+    "generic_name": "Amoxicillin",
+    "manufacturer_name": "Beximco Pharmaceuticals Ltd.",
+    "strength": "500 mg",
+    "dosage_form": "Capsule",
+    "route": "Oral",
+    "pack_price_bdt": 7.50
+  },
+  {
+    "brand_name": "Azithrocin",
+    "generic_name": "Azithromycin",
+    "manufacturer_name": "Square Pharmaceuticals Ltd.",
+    "strength": "500 mg",
+    "dosage_form": "Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 35.00
+  },
+  {
+    "brand_name": "Zimax",
+    "generic_name": "Azithromycin",
+    "manufacturer_name": "Beximco Pharmaceuticals Ltd.",
+    "strength": "500 mg",
+    "dosage_form": "Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 35.00
+  },
+  {
+    "brand_name": "Fexo",
+    "generic_name": "Fexofenadine",
+    "manufacturer_name": "Square Pharmaceuticals Ltd.",
+    "strength": "120 mg",
+    "dosage_form": "Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 9.00
+  },
+  {
+    "brand_name": "Telfast",
+    "generic_name": "Fexofenadine",
+    "manufacturer_name": "Sanofi Bangladesh Ltd.",
+    "strength": "120 mg",
+    "dosage_form": "Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 12.00
+  },
+  {
+    "brand_name": "Monas",
+    "generic_name": "Montelukast",
+    "manufacturer_name": "The Acme Laboratories Ltd.",
+    "strength": "10 mg",
+    "dosage_form": "Chewable Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 16.00
+  },
+  {
+    "brand_name": "Montene",
+    "generic_name": "Montelukast",
+    "manufacturer_name": "Square Pharmaceuticals Ltd.",
+    "strength": "10 mg",
+    "dosage_form": "Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 16.00
+  },
+  {
+    "brand_name": "Comet",
+    "generic_name": "Metformin",
+    "manufacturer_name": "Square Pharmaceuticals Ltd.",
+    "strength": "500 mg",
+    "dosage_form": "Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 4.50
+  },
+  {
+    "brand_name": "Bizoran",
+    "generic_name": "Amlodipine + Olmesartan",
+    "manufacturer_name": "Square Pharmaceuticals Ltd.",
+    "strength": "5 mg + 20 mg",
+    "dosage_form": "Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 14.00
+  },
+  {
+    "brand_name": "Alatrol",
+    "generic_name": "Cetirizine",
+    "manufacturer_name": "Square Pharmaceuticals Ltd.",
+    "strength": "10 mg",
+    "dosage_form": "Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 3.00
+  },
+  {
+    "brand_name": "Amodis",
+    "generic_name": "Metronidazole",
+    "manufacturer_name": "Square Pharmaceuticals Ltd.",
+    "strength": "400 mg",
+    "dosage_form": "Tablet",
+    "route": "Oral",
+    "pack_price_bdt": 1.50
+  }
+]
