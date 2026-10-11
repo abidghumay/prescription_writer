@@ -6,7 +6,7 @@
     "strength": "500 mg",
     "dosage_form": "Tablet",
     "route": "Oral",
-    "pack_price_bdt": 1.20,
+    "pack_price_bdt": 1.2,
     "synonyms": "Acetaminophen"
   },
   {
@@ -16,7 +16,7 @@
     "strength": "500 mg + 65 mg",
     "dosage_form": "Tablet",
     "route": "Oral",
-    "pack_price_bdt": 2.50
+    "pack_price_bdt": 2.5
   },
   {
     "brand_name": "Napa Extend",
@@ -25,7 +25,7 @@
     "strength": "665 mg",
     "dosage_form": "Extended Release Tablet",
     "route": "Oral",
-    "pack_price_bdt": 2.00
+    "pack_price_bdt": 2.0
   },
   {
     "brand_name": "Napa Syrup",
@@ -34,7 +34,7 @@
     "strength": "120 mg/5 ml",
     "dosage_form": "Syrup",
     "route": "Oral",
-    "pack_price_bdt": 35.00
+    "pack_price_bdt": 35.0
   },
   {
     "brand_name": "Ace",
@@ -43,7 +43,7 @@
     "strength": "500 mg",
     "dosage_form": "Tablet",
     "route": "Oral",
-    "pack_price_bdt": 1.20
+    "pack_price_bdt": 1.2
   },
   {
     "brand_name": "Ace Plus",
@@ -52,7 +52,7 @@
     "strength": "500 mg + 65 mg",
     "dosage_form": "Tablet",
     "route": "Oral",
-    "pack_price_bdt": 2.50
+    "pack_price_bdt": 2.5
   },
   {
     "brand_name": "Fast",
@@ -61,7 +61,7 @@
     "strength": "500 mg",
     "dosage_form": "Tablet",
     "route": "Oral",
-    "pack_price_bdt": 1.20
+    "pack_price_bdt": 1.2
   },
   {
     "brand_name": "Renova",
@@ -70,7 +70,7 @@
     "strength": "500 mg",
     "dosage_form": "Tablet",
     "route": "Oral",
-    "pack_price_bdt": 1.20
+    "pack_price_bdt": 1.2
   },
   {
     "brand_name": "Seclo",
@@ -79,7 +79,7 @@
     "strength": "20 mg",
     "dosage_form": "Capsule",
     "route": "Oral",
-    "pack_price_bdt": 6.00
+    "pack_price_bdt": 6.0
   },
   {
     "brand_name": "Seclo 40",
@@ -88,7 +88,7 @@
     "strength": "40 mg",
     "dosage_form": "Capsule",
     "route": "Oral",
-    "pack_price_bdt": 10.00
+    "pack_price_bdt": 10.0
   },
   {
     "brand_name": "Losectil",
@@ -97,7 +97,7 @@
     "strength": "20 mg",
     "dosage_form": "Capsule",
     "route": "Oral",
-    "pack_price_bdt": 6.00
+    "pack_price_bdt": 6.0
   },
   {
     "brand_name": "Omep",
@@ -106,7 +106,7 @@
     "strength": "20 mg",
     "dosage_form": "Capsule",
     "route": "Oral",
-    "pack_price_bdt": 6.00
+    "pack_price_bdt": 6.0
   },
   {
     "brand_name": "Sergel",
@@ -115,7 +115,7 @@
     "strength": "20 mg",
     "dosage_form": "Capsule",
     "route": "Oral",
-    "pack_price_bdt": 7.00
+    "pack_price_bdt": 7.0
   },
   {
     "brand_name": "Maxpro",
@@ -124,7 +124,7 @@
     "strength": "20 mg",
     "dosage_form": "Tablet",
     "route": "Oral",
-    "pack_price_bdt": 7.00
+    "pack_price_bdt": 7.0
   },
   {
     "brand_name": "Finix",
@@ -133,7 +133,7 @@
     "strength": "20 mg",
     "dosage_form": "Tablet",
     "route": "Oral",
-    "pack_price_bdt": 7.00
+    "pack_price_bdt": 7.0
   },
   {
     "brand_name": "Ciprocin",
@@ -142,7 +142,7 @@
     "strength": "500 mg",
     "dosage_form": "Tablet",
     "route": "Oral",
-    "pack_price_bdt": 14.00
+    "pack_price_bdt": 14.0
   },
   {
     "brand_name": "Neoflox",
@@ -151,7 +151,7 @@
     "strength": "500 mg",
     "dosage_form": "Tablet",
     "route": "Oral",
-    "pack_price_bdt": 14.00
+    "pack_price_bdt": 14.0
   },
   {
     "brand_name": "Moxacil",
@@ -160,7 +160,7 @@
     "strength": "500 mg",
     "dosage_form": "Capsule",
     "route": "Oral",
-    "pack_price_bdt": 7.50
+    "pack_price_bdt": 7.5
   },
   {
     "brand_name": "Tycil",
@@ -169,7 +169,7 @@
     "strength": "500 mg",
     "dosage_form": "Capsule",
     "route": "Oral",
-    "pack_price_bdt": 7.50
+    "pack_price_bdt": 7.5
   },
   {
     "brand_name": "Azithrocin",
@@ -178,7 +178,7 @@
     "strength": "500 mg",
     "dosage_form": "Tablet",
     "route": "Oral",
-    "pack_price_bdt": 35.00
+    "pack_price_bdt": 35.0
   },
   {
     "brand_name": "Zimax",
@@ -187,7 +187,7 @@
     "strength": "500 mg",
     "dosage_form": "Tablet",
     "route": "Oral",
-    "pack_price_bdt": 35.00
+    "pack_price_bdt": 35.0
   },
   {
     "brand_name": "Fexo",
@@ -196,7 +196,7 @@
     "strength": "120 mg",
     "dosage_form": "Tablet",
     "route": "Oral",
-    "pack_price_bdt": 9.00
+    "pack_price_bdt": 9.0
   },
   {
     "brand_name": "Telfast",
@@ -205,7 +205,7 @@
     "strength": "120 mg",
     "dosage_form": "Tablet",
     "route": "Oral",
-    "pack_price_bdt": 12.00
+    "pack_price_bdt": 12.0
   },
   {
     "brand_name": "Monas",
@@ -214,7 +214,7 @@
     "strength": "10 mg",
     "dosage_form": "Chewable Tablet",
     "route": "Oral",
-    "pack_price_bdt": 16.00
+    "pack_price_bdt": 16.0
   },
   {
     "brand_name": "Montene",
@@ -223,7 +223,7 @@
     "strength": "10 mg",
     "dosage_form": "Tablet",
     "route": "Oral",
-    "pack_price_bdt": 16.00
+    "pack_price_bdt": 16.0
   },
   {
     "brand_name": "Comet",
@@ -232,7 +232,7 @@
     "strength": "500 mg",
     "dosage_form": "Tablet",
     "route": "Oral",
-    "pack_price_bdt": 4.50
+    "pack_price_bdt": 4.5
   },
   {
     "brand_name": "Bizoran",
@@ -241,7 +241,7 @@
     "strength": "5 mg + 20 mg",
     "dosage_form": "Tablet",
     "route": "Oral",
-    "pack_price_bdt": 14.00
+    "pack_price_bdt": 14.0
   },
   {
     "brand_name": "Alatrol",
@@ -250,7 +250,7 @@
     "strength": "10 mg",
     "dosage_form": "Tablet",
     "route": "Oral",
-    "pack_price_bdt": 3.00
+    "pack_price_bdt": 3.0
   },
   {
     "brand_name": "Amodis",
@@ -259,6 +259,6 @@
     "strength": "400 mg",
     "dosage_form": "Tablet",
     "route": "Oral",
-    "pack_price_bdt": 1.50
+    "pack_price_bdt": 1.5
   }
 ]

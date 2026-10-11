@@ -11,9 +11,7 @@ const config: ForgeConfig = {
   rebuildConfig: {
     onlyModules: [],
   },
-  makers: [
-    new MakerSquirrel({}),
-  ],
+  makers: [new MakerSquirrel({})],
   plugins: [
     new VitePlugin({
       build: [

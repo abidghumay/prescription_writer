@@ -32,7 +32,7 @@ export function importDrugDataset(
   db: Database.Database,
   entries: RawDrugEntry[],
   source: string,
-  sourceVersion: string = '1.0'
+  sourceVersion: string = '1.0',
 ): ImportReport {
   const startTime = Date.now();
   const report: ImportReport = {
@@ -48,45 +48,46 @@ export function importDrugDataset(
 
   // Prepared statements for high performance and idempotency
   const findGeneric = db.prepare<[string], { id: number; name: string }>(
-    'SELECT id, name FROM generic WHERE LOWER(name) = LOWER(?)'
+    'SELECT id, name FROM generic WHERE LOWER(name) = LOWER(?)',
   );
   const insertGeneric = db.prepare<[string, string | null]>(
-    'INSERT INTO generic (name, synonyms) VALUES (?, ?)'
+    'INSERT INTO generic (name, synonyms) VALUES (?, ?)',
   );
   const updateGenericSynonyms = db.prepare<[string, number]>(
-    'UPDATE generic SET synonyms = ? WHERE id = ?'
+    'UPDATE generic SET synonyms = ? WHERE id = ?',
   );
 
   const findManufacturer = db.prepare<[string], { id: number }>(
-    'SELECT id FROM manufacturer WHERE LOWER(name) = LOWER(?)'
+    'SELECT id FROM manufacturer WHERE LOWER(name) = LOWER(?)',
   );
   const insertManufacturer = db.prepare<[string]>(
-    'INSERT INTO manufacturer (name) VALUES (?)'
+    'INSERT INTO manufacturer (name) VALUES (?)',
   );
 
-  const findBrand = db.prepare<[string, number, number | null, number | null, string | null], { id: number }>(
+  const findBrand = db.prepare<
+    [string, number, number | null, number | null, string | null],
+    { id: number }
+  >(
     `SELECT id FROM brand 
      WHERE LOWER(brand_name) = LOWER(?) 
        AND generic_id = ? 
        AND (manufacturer_id = ? OR (manufacturer_id IS NULL AND ? IS NULL))
-       AND (LOWER(COALESCE(strength, '')) = LOWER(COALESCE(?, '')))`
+       AND (LOWER(COALESCE(strength, '')) = LOWER(COALESCE(?, '')))`,
   );
 
   const insertBrand = db.prepare(
     `INSERT INTO brand (
       brand_name, generic_id, manufacturer_id, strength, dosage_form, route,
       pack_price_bdt, dgda_reg_no, source, source_version, is_custom
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)`
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)`,
   );
 
   const insertFts = db.prepare(
     `INSERT INTO brand_fts (brand_name, generic_name, manufacturer_name, strength, brand_id)
-     VALUES (?, ?, ?, ?, ?)`
+     VALUES (?, ?, ?, ?, ?)`,
   );
 
-  const updateFts = db.prepare(
-    `DELETE FROM brand_fts WHERE brand_id = ?`
-  );
+  const updateFts = db.prepare(`DELETE FROM brand_fts WHERE brand_id = ?`);
 
   const runImport = db.transaction(() => {
     for (let i = 0; i < entries.length; i++) {
@@ -97,7 +98,8 @@ export function importDrugDataset(
       const strength = normalizeText(row.strength);
       const dosageForm = normalizeText(row.dosage_form);
       const route = normalizeText(row.route);
-      const price = typeof row.pack_price_bdt === 'number' ? row.pack_price_bdt : null;
+      const price =
+        typeof row.pack_price_bdt === 'number' ? row.pack_price_bdt : null;
       const dgdaReg = normalizeText(row.dgda_reg_no);
 
       // Validation & Suspicious Checks
@@ -131,7 +133,10 @@ export function importDrugDataset(
           updateGenericSynonyms.run(newSyn, genericId);
         }
       } else {
-        const info = insertGeneric.run(genericName, row.synonyms ? normalizeText(row.synonyms) : null);
+        const info = insertGeneric.run(
+          genericName,
+          row.synonyms ? normalizeText(row.synonyms) : null,
+        );
         genericId = Number(info.lastInsertRowid);
       }
 
@@ -153,7 +158,7 @@ export function importDrugDataset(
         genericId,
         manufacturerId,
         manufacturerId,
-        strength || null
+        strength || null,
       );
 
       if (existingBrand) {
@@ -165,7 +170,7 @@ export function importDrugDataset(
           genericName,
           manufacturerName || '',
           strength || '',
-          existingBrand.id
+          existingBrand.id,
         );
       } else {
         const info = insertBrand.run(
@@ -178,7 +183,7 @@ export function importDrugDataset(
           price,
           dgdaReg || null,
           source,
-          sourceVersion
+          sourceVersion,
         );
         const brandId = Number(info.lastInsertRowid);
 
@@ -187,7 +192,7 @@ export function importDrugDataset(
           genericName,
           manufacturerName || '',
           strength || '',
-          brandId
+          brandId,
         );
         report.inserted++;
       }

@@ -41,14 +41,17 @@ function levenshteinDistance(a: string, b: string): number {
       d[i][j] = Math.min(
         d[i - 1][j] + 1, // deletion
         d[i][j - 1] + 1, // insertion
-        d[i - 1][j - 1] + cost // substitution
+        d[i - 1][j - 1] + cost, // substitution
       );
     }
   }
   return d[m][n];
 }
 
-export function searchDrugs(db: Database.Database, rawQuery: string): DrugSearchResponse {
+export function searchDrugs(
+  db: Database.Database,
+  rawQuery: string,
+): DrugSearchResponse {
   const startTime = performance.now();
   const query = rawQuery.trim().toLowerCase();
 
@@ -131,7 +134,12 @@ export function searchDrugs(db: Database.Database, rawQuery: string): DrugSearch
       const gDist = levenshteinDistance(query, gLower);
       const maxDist = query.length <= 4 ? 1 : 2;
 
-      if (bLower.includes(query) || gLower.includes(query) || bDist <= maxDist || gDist <= maxDist) {
+      if (
+        bLower.includes(query) ||
+        gLower.includes(query) ||
+        bDist <= maxDist ||
+        gDist <= maxDist
+      ) {
         rows.push(b);
         existingIds.add(b.id);
       }

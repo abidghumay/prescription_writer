@@ -3,6 +3,7 @@
 These tokens define the core visual language for the prescription writer app, designed for a calm, clinical, and fast user experience.
 
 ## Colors
+
 - **Background**: `hsl(0, 0%, 100%)` (White for clarity and high contrast)
 - **Foreground (Text)**: `hsl(222.2, 84%, 4.9%)` (Very dark blue/gray for readability)
 - **Accent/Primary**: `hsl(200, 70%, 40%)` (Calm Teal/Blue - #1f8bba)
@@ -13,6 +14,7 @@ These tokens define the core visual language for the prescription writer app, de
 - **Custom Badge**: `hsl(40, 90%, 50%)` (Subtle amber for indicating custom/unverified drugs)
 
 ## Typography
+
 - **Font Family (Latin)**: `Inter`, `system-ui`, `sans-serif`
 - **Font Family (Bangla)**: `Noto Sans Bengali`, `sans-serif`
 - **Font Family (Tabular)**: `ui-monospace`, `SFMono-Regular`, `Menlo`, `Monaco`, `Consolas`, `monospace` (For doses and numbers)
@@ -20,6 +22,7 @@ These tokens define the core visual language for the prescription writer app, de
 - **Line Height**: `1.6` (Generous spacing for clinical notes)
 
 ## Spacing & Layout
+
 - **Base Unit**: `4px`
 - **Padding (Small)**: `8px`
 - **Padding (Medium)**: `16px` (Standard component padding)
@@ -28,5 +31,6 @@ These tokens define the core visual language for the prescription writer app, de
 - **Border Radius (Medium)**: `8px` (Cards, panels)
 
 ## Shadows
+
 - **Focus Ring**: `0 0 0 2px hsl(200, 70%, 40%, 0.5)` (Visible keyboard focus is mandatory)
 - **Card/Panel**: `0 1px 3px rgba(0,0,0,0.1)` (Flat, minimal depth)

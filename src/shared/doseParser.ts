@@ -24,7 +24,9 @@ export function parseDoseToken(input: string): string {
 
   // Handle half tokens with 'h': e.g. 'h0h' -> '½+0+½', '10h' -> '1+0+½'
   if (/^[0-9hH]{3}$/.test(trimmed)) {
-    const chars = trimmed.split('').map((c) => (c.toLowerCase() === 'h' ? '½' : c));
+    const chars = trimmed
+      .split('')
+      .map((c) => (c.toLowerCase() === 'h' ? '½' : c));
     return `${chars[0]}+${chars[1]}+${chars[2]}`;
   }
 

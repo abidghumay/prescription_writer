@@ -97,11 +97,19 @@ let updated = 0;
 let skipped = 0;
 const suspicious = [];
 
-const findGeneric = db.prepare('SELECT id, name FROM generic WHERE LOWER(name) = LOWER(?)');
-const insertGeneric = db.prepare('INSERT INTO generic (name, synonyms) VALUES (?, ?)');
-const updateGenericSyn = db.prepare('UPDATE generic SET synonyms = ? WHERE id = ?');
+const findGeneric = db.prepare(
+  'SELECT id, name FROM generic WHERE LOWER(name) = LOWER(?)',
+);
+const insertGeneric = db.prepare(
+  'INSERT INTO generic (name, synonyms) VALUES (?, ?)',
+);
+const updateGenericSyn = db.prepare(
+  'UPDATE generic SET synonyms = ? WHERE id = ?',
+);
 
-const findMfr = db.prepare('SELECT id FROM manufacturer WHERE LOWER(name) = LOWER(?)');
+const findMfr = db.prepare(
+  'SELECT id FROM manufacturer WHERE LOWER(name) = LOWER(?)',
+);
 const insertMfr = db.prepare('INSERT INTO manufacturer (name) VALUES (?)');
 
 const findBrand = db.prepare(`
@@ -134,17 +142,26 @@ const importTx = db.transaction(() => {
     const str = (row.strength || '').trim();
     const form = (row.dosage_form || '').trim();
     const route = (row.route || '').trim();
-    const price = typeof row.pack_price_bdt === 'number' ? row.pack_price_bdt : null;
+    const price =
+      typeof row.pack_price_bdt === 'number' ? row.pack_price_bdt : null;
     const dgda = (row.dgda_reg_no || '').trim();
 
     if (!bName) {
       skipped++;
-      suspicious.push({ row: i + 1, item: gName || 'Empty row', reason: 'Missing brand name' });
+      suspicious.push({
+        row: i + 1,
+        item: gName || 'Empty row',
+        reason: 'Missing brand name',
+      });
       continue;
     }
     if (!gName) {
       skipped++;
-      suspicious.push({ row: i + 1, item: bName, reason: 'Brand has no generic name' });
+      suspicious.push({
+        row: i + 1,
+        item: bName,
+        reason: 'Brand has no generic name',
+      });
       continue;
     }
 
@@ -154,7 +171,10 @@ const importTx = db.transaction(() => {
       genericId = exGen.id;
       if (row.synonyms) updateGenericSyn.run(row.synonyms.trim(), genericId);
     } else {
-      const res = insertGeneric.run(gName, row.synonyms ? row.synonyms.trim() : null);
+      const res = insertGeneric.run(
+        gName,
+        row.synonyms ? row.synonyms.trim() : null,
+      );
       genericId = res.lastInsertRowid;
     }
 
@@ -185,7 +205,7 @@ const importTx = db.transaction(() => {
         price,
         dgda || null,
         source,
-        version
+        version,
       );
       insertFts.run(bName, gName, mName, str, res.lastInsertRowid);
       inserted++;
@@ -204,7 +224,9 @@ console.log(` Rows Updated:     ${updated}`);
 console.log(` Rows Skipped:     ${skipped}`);
 console.log(` Suspicious Rows:  ${suspicious.length}`);
 if (suspicious.length > 0) {
-  suspicious.forEach(s => console.log(`   - Row ${s.row}: "${s.item}" -> ${s.reason}`));
+  suspicious.forEach((s) =>
+    console.log(`   - Row ${s.row}: "${s.item}" -> ${s.reason}`),
+  );
 }
 console.log(` Duration:         ${duration} ms`);
 console.log(` Status:           COMPLETED SUCCESSFUL`);
