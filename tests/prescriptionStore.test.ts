@@ -134,4 +134,88 @@ describe('usePrescriptionStore', () => {
     expect(mockFinalizePrescription).toHaveBeenCalledWith(202);
     expect(mockClearDraft).toHaveBeenCalled();
   });
+
+  it('applies clinical template properly in 1-click', () => {
+    const store = usePrescriptionStore.getState();
+    store.applyTemplate({
+      id: 'fever_test',
+      name: 'Fever URTI',
+      category: 'General',
+      description: 'Test template',
+      chief_complaints: 'High fever for 3 days',
+      on_examination: 'Temp 101F',
+      diagnosis: 'Acute URTI',
+      investigations: 'CBC',
+      advice: 'Drink warm water',
+      follow_up: 'After 3 days',
+      items: [
+        {
+          free_text_name: 'Napa',
+          form_snapshot: 'Tablet',
+          strength_snapshot: '500 mg',
+          generic_snapshot: 'Paracetamol',
+          dose: '1+1+1',
+          meal_timing: 'After meal',
+          duration: '3 days',
+        },
+      ],
+    });
+
+    const state = usePrescriptionStore.getState();
+    expect(state.chiefComplaints).toBe('High fever for 3 days');
+    expect(state.diagnosis).toBe('Acute URTI');
+    expect(state.advice).toBe('Drink warm water');
+    expect(state.items).toHaveLength(1);
+    expect(state.items[0].free_text_name).toBe('Napa');
+    expect(state.items[0].dose).toBe('1+1+1');
+  });
+
+  it('swaps brand alternative while preserving dosage and instructions', () => {
+    const store = usePrescriptionStore.getState();
+    store.addItem({
+      brand_id: 10,
+      free_text_name: 'Napa',
+      strength_snapshot: '500 mg',
+      form_snapshot: 'Tablet',
+      generic_snapshot: 'Paracetamol',
+      dose: '1+0+1',
+      meal_timing: 'After meal',
+      duration: '5 days',
+      note: 'If fever > 101F',
+    });
+
+    // Swap Napa with Ace (same generic)
+    store.applySiblingSwap(0, {
+      id: 20,
+      brand_name: 'Ace',
+      generic_name: 'Paracetamol',
+      generic_id: 1,
+      manufacturer_name: 'Square Pharmaceuticals Ltd.',
+      strength: '500 mg',
+      dosage_form: 'Tablet',
+      is_custom: false,
+      use_count: 5,
+      score: 10,
+    });
+
+    const state = usePrescriptionStore.getState();
+    expect(state.items[0].brand_id).toBe(20);
+    expect(state.items[0].free_text_name).toBe('Ace');
+    expect(state.items[0].dose).toBe('1+0+1'); // preserved
+    expect(state.items[0].duration).toBe('5 days'); // preserved
+    expect(state.items[0].meal_timing).toBe('After meal'); // preserved
+    expect(state.items[0].note).toBe('If fever > 101F'); // preserved
+  });
+
+  it('calls next token in chamber queue and updates patient name', () => {
+    const store = usePrescriptionStore.getState();
+    expect(store.tokens[0].status).toBe('in_consultation');
+    expect(store.tokens[1].status).toBe('waiting');
+
+    store.callNextToken();
+    const state = usePrescriptionStore.getState();
+    expect(state.tokens[0].status).toBe('completed');
+    expect(state.tokens[1].status).toBe('in_consultation');
+    expect(state.name).toBe(state.tokens[1].patient_name);
+  });
 });

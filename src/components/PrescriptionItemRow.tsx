@@ -1,7 +1,9 @@
-import React, { useEffect, useRef } from 'react';
-import { Trash2 } from 'lucide-react';
-import type { PrescriptionItem } from '../shared/types';
+import React, { useEffect, useRef, useState } from 'react';
+import { Trash2, RefreshCw } from 'lucide-react';
+import type { PrescriptionItem, BrandSearchResult } from '../shared/types';
 import { parseDoseToken } from '../shared/doseParser';
+import { animateCardAddition } from '../shared/animations';
+import { usePrescriptionStore } from '../store/usePrescriptionStore';
 
 interface PrescriptionItemRowProps {
   item: PrescriptionItem;
@@ -29,6 +31,15 @@ const DURATION_PRESETS = [
 
 const QUICK_DOSES = ['1+0+1', '1+1+1', '1+0+0', '0+0+1', '½+0+½'];
 
+const BENGALI_DOSE_HINTS: Record<string, string> = {
+  '1+0+1': '১+০+১ (সকাল ও রাত)',
+  '1+1+1': '১+১+১ (সকাল, দুপুর ও রাত)',
+  '1+0+0': '১+০+০ (সকালে একবার)',
+  '0+0+1': '০+০+১ (রাতে একবার)',
+  '0+1+0': '০+১+০ (দুপুরে একবার)',
+  '½+0+½': '½+০+½ (আধা ট্যাবলেট করে)',
+};
+
 export default function PrescriptionItemRow({
   item,
   index,
@@ -37,6 +48,48 @@ export default function PrescriptionItemRow({
   autoFocusDose,
 }: PrescriptionItemRowProps) {
   const doseInputRef = useRef<HTMLInputElement>(null);
+  const rowRef = useRef<HTMLDivElement>(null);
+  const { applySiblingSwap } = usePrescriptionStore();
+
+  const [siblingResults, setSiblingResults] = useState<BrandSearchResult[]>([]);
+  const [showSiblings, setShowSiblings] = useState(false);
+  const [isSearchingSiblings, setIsSearchingSiblings] = useState(false);
+
+  useEffect(() => {
+    if (rowRef.current) {
+      animateCardAddition(rowRef.current);
+    }
+  }, []);
+
+  const handleFetchSiblings = async () => {
+    if (!item.generic_snapshot) return;
+    if (showSiblings) {
+      setShowSiblings(false);
+      return;
+    }
+
+    setIsSearchingSiblings(true);
+    if (window.api?.searchDrugs) {
+      try {
+        const res = await window.api.searchDrugs(item.generic_snapshot);
+        const matches = res.matches.filter(
+          (m) =>
+            m.brand_name.toLowerCase() !== item.free_text_name?.toLowerCase(),
+        );
+        setSiblingResults(matches);
+        setShowSiblings(true);
+      } catch (err) {
+        console.error('Failed to search siblings:', err);
+      } finally {
+        setIsSearchingSiblings(false);
+      }
+    }
+  };
+
+  const handleSwap = (sibling: BrandSearchResult) => {
+    applySiblingSwap(index, sibling);
+    setShowSiblings(false);
+  };
 
   useEffect(() => {
     if (autoFocusDose) {
@@ -64,11 +117,14 @@ export default function PrescriptionItemRow({
   const displayName = item.free_text_name || 'Medicine';
 
   return (
-    <div className="p-3 bg-white border border-slate-200 rounded-lg hover:border-slate-300 transition-colors shadow-xs">
+    <div
+      ref={rowRef}
+      className="p-3.5 bg-white border border-slate-200/90 rounded-xl hover:border-teal-300 transition-all shadow-xs"
+    >
       {/* Row Header: Position, Medicine Title, Generic, and Remove Button */}
       <div className="flex items-start justify-between gap-3 pb-2 border-b border-slate-100">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-700 font-bold text-[11px] flex items-center justify-center shrink-0">
+          <span className="w-5 h-5 rounded-md bg-teal-50 text-teal-700 font-bold text-[11px] flex items-center justify-center shrink-0 border border-teal-200">
             {index + 1}
           </span>
           <span className="font-bold text-sm text-slate-900 tracking-tight">
@@ -94,6 +150,21 @@ export default function PrescriptionItemRow({
               Free-text
             </span>
           )}
+
+          {/* Sibling Alternative Brand Switcher Button */}
+          {item.generic_snapshot && (
+            <button
+              type="button"
+              onClick={handleFetchSiblings}
+              className="inline-flex items-center gap-1 text-[10px] font-semibold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200 px-2 py-0.5 rounded-full transition-colors cursor-pointer"
+              title="Show other brands for this generic"
+            >
+              <RefreshCw
+                className={`w-2.5 h-2.5 ${isSearchingSiblings ? 'animate-spin' : ''}`}
+              />
+              <span>{showSiblings ? 'Close Alternatives' : 'Swap Brand'}</span>
+            </button>
+          )}
         </div>
 
         <button
@@ -105,6 +176,41 @@ export default function PrescriptionItemRow({
           <Trash2 className="w-3.5 h-3.5" />
         </button>
       </div>
+
+      {/* Sibling Alternative Brands List Drawer */}
+      {showSiblings && (
+        <div className="mt-2 mb-2 p-2.5 bg-teal-50/60 border border-teal-200 rounded-lg text-xs space-y-1.5">
+          <div className="flex items-center justify-between text-[11px] font-bold text-teal-900 pb-1 border-b border-teal-200/60">
+            <span>Equivalent Brands ({item.generic_snapshot})</span>
+            <span className="text-[10px] font-normal text-teal-700">
+              Click to swap
+            </span>
+          </div>
+
+          {siblingResults.length === 0 ? (
+            <p className="text-[11px] text-teal-700 py-1">
+              No other alternative companies found in catalog.
+            </p>
+          ) : (
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              {siblingResults.slice(0, 8).map((sib) => (
+                <button
+                  key={sib.id}
+                  type="button"
+                  onClick={() => handleSwap(sib)}
+                  className="px-2 py-1 bg-white hover:bg-teal-600 hover:text-white border border-teal-200 rounded-md text-[11px] font-medium text-slate-800 transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                  title={`${sib.dosage_form} ${sib.strength} by ${sib.manufacturer_name}`}
+                >
+                  <span className="font-bold">{sib.brand_name}</span>
+                  <span className="text-[9px] opacity-75">
+                    ({sib.manufacturer_name})
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Inputs Grid */}
       <div className="grid grid-cols-12 gap-2 pt-2.5 items-start">
@@ -140,6 +246,11 @@ export default function PrescriptionItemRow({
               </button>
             ))}
           </div>
+          {BENGALI_DOSE_HINTS[item.dose] && (
+            <span className="text-[10px] text-teal-700 font-bangla block mt-1">
+              {BENGALI_DOSE_HINTS[item.dose]}
+            </span>
+          )}
         </div>
 
         {/* Meal Timing (col-span-3) */}

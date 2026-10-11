@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
+import { FileEdit, Search, Users, Settings } from 'lucide-react';
 import type { AppSettings, DatabaseStats } from '../shared/types';
 
 export interface LayoutContextType {
@@ -41,41 +42,47 @@ export default function Layout() {
   }, []);
 
   const navItemClass = ({ isActive }: { isActive: boolean }) =>
-    `w-full text-left px-3 py-2 text-sm rounded-md font-medium transition-colors block ${
+    `w-full text-left px-3 py-2 text-xs rounded-lg font-medium transition-all flex items-center gap-2.5 ${
       isActive
-        ? 'bg-teal-50 text-teal-700 font-semibold'
-        : 'text-slate-600 hover:bg-slate-100'
+        ? 'bg-teal-50 text-teal-800 font-bold border border-teal-200/80 shadow-2xs'
+        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
     }`;
 
   return (
-    <div className="flex h-screen w-full bg-slate-50 text-slate-900 select-none font-sans">
+    <div className="flex h-screen w-full bg-slate-100/70 text-slate-900 select-none font-sans">
       {/* Left Navigation Rail */}
-      <aside className="w-56 border-r border-slate-200 bg-white flex flex-col justify-between p-4">
+      <aside className="w-60 border-r border-slate-200 bg-white flex flex-col justify-between p-4 shadow-2xs">
         <div>
-          <div className="flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center text-white font-bold text-base shadow-sm">
-              Rx
+          <div className="flex items-center gap-2.5 mb-6 px-1">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center text-white font-bold text-lg shadow-sm">
+              ℞
             </div>
             <div>
-              <h1 className="font-semibold text-sm leading-tight text-slate-800">
-                Prescription Writer
+              <h1 className="font-bold text-sm leading-tight text-slate-900 flex items-center gap-1">
+                <span>ProtonRx Next</span>
               </h1>
-              <p className="text-xs text-slate-400">Offline Edition</p>
+              <p className="text-[10px] text-teal-700 font-semibold tracking-wide">
+                Offline Clinical Suite
+              </p>
             </div>
           </div>
 
           <nav className="space-y-1">
             <NavLink to="/" end className={navItemClass}>
-              Prescription Editor
+              <FileEdit className="w-4 h-4 text-teal-600" />
+              <span>Prescription Canvas</span>
             </NavLink>
             <NavLink to="/search" className={navItemClass}>
-              Drug Search (Phase 1)
+              <Search className="w-4 h-4 text-slate-500" />
+              <span>Drug Formulary</span>
             </NavLink>
             <NavLink to="/patients" className={navItemClass}>
-              Patients
+              <Users className="w-4 h-4 text-slate-500" />
+              <span>Patient Records</span>
             </NavLink>
             <NavLink to="/settings" className={navItemClass}>
-              Settings
+              <Settings className="w-4 h-4 text-slate-500" />
+              <span>Chamber Settings</span>
             </NavLink>
           </nav>
         </div>

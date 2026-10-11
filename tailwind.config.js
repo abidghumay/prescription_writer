@@ -19,6 +19,7 @@ export default {
           foreground: 'hsl(210, 40%, 98%)',
         },
         customBadge: 'hsl(40, 90%, 50%)',
+        border: 'hsl(var(--border, 214.3 31.8% 91.4%))',
         clinical: {
           teal: {
             50: '#F0FDFA',
