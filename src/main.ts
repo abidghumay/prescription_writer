@@ -23,18 +23,36 @@ if (started) {
 }
 
 let inMemorySettings: AppSettings = {
-  doctorName: 'Dr. Sample Name',
-  degrees: 'MBBS (Sample)',
-  bmdcReg: 'BMDC Reg. No. 00000',
-  chamberName: 'Sample Chamber',
-  chamberAddress: 'Chamber Address, Dhaka',
-  chamberHours: '5:00 PM - 9:00 PM',
-  chamberPhone: '+880 1700-000000',
+  isOnboarded: false,
+  doctorName: '',
+  degrees: '',
+  bmdcReg: '',
+  specialty: 'General Physician',
+  chamberName: '',
+  chamberAddress: '',
+  chamberHours: '',
+  chamberPhone: '',
+  consultationFee: null,
+  printHeaderMode: 'full',
 };
 
 const setupIpcHandlers = () => {
   // Initialize Database
   const db = initDatabase();
+
+  // Load persistent doctor settings from SQLite
+  try {
+    const savedSettingsRow = db
+      .prepare("SELECT value FROM app_setting WHERE key = 'doctor_settings'")
+      .get() as { value: string } | undefined;
+    if (savedSettingsRow?.value) {
+      inMemorySettings = AppSettingsSchema.parse(
+        JSON.parse(savedSettingsRow.value),
+      );
+    }
+  } catch (err) {
+    console.error('Failed to load doctor settings on startup:', err);
+  }
 
   // If brand table is empty, auto-seed with sample drugs
   const countRow = db.prepare('SELECT COUNT(*) as count FROM brand').get() as {
@@ -49,7 +67,13 @@ const setupIpcHandlers = () => {
   ipcMain.handle('app:get-version', () => app.getVersion());
   ipcMain.handle('settings:get', () => inMemorySettings);
   ipcMain.handle('settings:save', (_event, newSettings: AppSettings) => {
-    inMemorySettings = { ...inMemorySettings, ...newSettings };
+    const parsed = AppSettingsSchema.parse(newSettings);
+    inMemorySettings = parsed;
+    db.prepare(`
+      INSERT INTO app_setting (key, value)
+      VALUES ('doctor_settings', ?)
+      ON CONFLICT(key) DO UPDATE SET value = excluded.value
+    `).run(JSON.stringify(parsed));
     return true;
   });
 

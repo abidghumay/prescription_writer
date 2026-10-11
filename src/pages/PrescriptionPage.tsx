@@ -22,13 +22,17 @@ import PatientHistoryDrawer from '../components/PatientHistoryDrawer';
 import PrintStudioModal from '../components/PrintStudioModal';
 
 const defaultSettings = {
+  isOnboarded: false,
   doctorName: 'Dr. Sample Name',
-  degrees: 'MBBS (Sample)',
+  degrees: 'MBBS',
   bmdcReg: 'BMDC Reg. No. 00000',
+  specialty: 'General Physician',
   chamberName: 'Sample Chamber',
   chamberAddress: 'Dhaka, Bangladesh',
   chamberHours: '5:00 PM - 9:00 PM',
   chamberPhone: '+880 1700-000000',
+  consultationFee: null,
+  printHeaderMode: 'full' as const,
 };
 
 export default function PrescriptionPage() {

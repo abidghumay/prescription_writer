@@ -1,13 +1,17 @@
 import { z } from 'zod';
 
 export const AppSettingsSchema = z.object({
-  doctorName: z.string().default('Dr. Sample Name'),
-  degrees: z.string().default('MBBS (Sample)'),
-  bmdcReg: z.string().default('BMDC Reg. No. 00000'),
-  chamberName: z.string().default('Sample Chamber'),
-  chamberAddress: z.string().default('Dhaka, Bangladesh'),
-  chamberHours: z.string().default('5:00 PM - 9:00 PM'),
-  chamberPhone: z.string().default('+880 1700-000000'),
+  isOnboarded: z.boolean().default(false),
+  doctorName: z.string().default(''),
+  degrees: z.string().default(''),
+  bmdcReg: z.string().default(''),
+  specialty: z.string().default('General Physician'),
+  chamberName: z.string().default(''),
+  chamberAddress: z.string().default(''),
+  chamberHours: z.string().default(''),
+  chamberPhone: z.string().default(''),
+  consultationFee: z.number().nullable().default(null),
+  printHeaderMode: z.enum(['full', 'pad_space']).default('full'),
 });
 
 export type AppSettings = z.infer<typeof AppSettingsSchema>;
