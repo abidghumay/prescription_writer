@@ -135,9 +135,9 @@ export default function RxMedicineSearch({ onAddDrug }: RxMedicineSearchProps) {
   };
 
   return (
-    <div ref={containerRef} className="relative mt-2">
+    <div ref={containerRef} className="relative mt-4">
       <div className="relative flex items-center">
-        <Search className="w-4 h-4 text-slate-400 absolute left-3 pointer-events-none" />
+        <Search className="w-4 h-4 text-gold-600 absolute left-3.5 pointer-events-none" />
         <input
           ref={inputRef}
           type="text"
@@ -147,16 +147,16 @@ export default function RxMedicineSearch({ onAddDrug }: RxMedicineSearchProps) {
             if (searchResults && query.trim()) setIsOpen(true);
           }}
           onKeyDown={handleKeyDown}
-          placeholder="+ Type medicine name (e.g. Napa, Seclo, Paracetamol) & press Enter..."
-          className="w-full pl-9 pr-24 py-2.5 text-xs bg-white border-2 border-teal-600/40 rounded-lg focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 font-medium text-slate-900 placeholder:text-slate-400 shadow-xs"
+          placeholder="+ Search brand or generic name (e.g. Napa, Seclo, Ciprofloxacin) or type free-text..."
+          className="w-full h-12 pl-11 pr-28 text-sm bg-white border border-beige-300 hover:border-gold-400 focus:border-gold-600 focus:ring-1 focus:ring-gold-500/30 rounded-xl font-medium text-ink-900 placeholder-ink-400 shadow-xs transition-all"
         />
-        <div className="absolute right-3 flex items-center gap-1.5 text-[11px] text-slate-400">
+        <div className="absolute right-3 flex items-center gap-1.5 text-xs text-ink-400">
           {isSearching ? (
-            <span className="text-teal-600 animate-pulse font-medium">
+            <span className="text-gold-700 animate-pulse font-medium text-xs">
               Searching...
             </span>
           ) : (
-            <kbd className="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded text-[10px] font-mono text-slate-600">
+            <kbd className="px-2 py-0.5 bg-beige-100 border border-beige-300 rounded-lg text-[10px] font-mono text-gold-700">
               Enter ↵
             </kbd>
           )}
@@ -165,15 +165,15 @@ export default function RxMedicineSearch({ onAddDrug }: RxMedicineSearchProps) {
 
       {/* Autocomplete Dropdown */}
       {isOpen && (
-        <div className="absolute left-0 right-0 top-full mt-1.5 bg-white border border-slate-200 rounded-lg shadow-xl overflow-hidden z-40 divide-y divide-slate-100 max-h-72 overflow-y-auto">
+        <div className="absolute left-0 right-0 top-full mt-2 bg-white border border-beige-300 rounded-2xl shadow-xl overflow-hidden z-40 divide-y divide-beige-200 max-h-80 overflow-y-auto">
           {/* Header */}
-          <div className="bg-slate-50 px-3 py-1.5 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-500">
+          <div className="bg-beige-50 px-4 py-2 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-gold-700">
             <span>
               {allNavigableItems.length > 0
                 ? `Results (${searchResults?.matches.length ?? 0} matches)`
                 : 'No database matches'}
             </span>
-            <span className="font-normal lowercase text-slate-400">
+            <span className="font-normal lowercase text-ink-500">
               ↑↓ navigate &middot; Enter to add
             </span>
           </div>
@@ -186,36 +186,36 @@ export default function RxMedicineSearch({ onAddDrug }: RxMedicineSearchProps) {
                 key={`match-${item.id}`}
                 onClick={() => handleSelectDrug(item)}
                 onMouseEnter={() => setSelectedIndex(idx)}
-                className={`px-3 py-2 cursor-pointer flex items-center justify-between text-xs transition-colors ${
+                className={`px-4 py-3 cursor-pointer flex items-center justify-between text-xs transition-colors ${
                   isHighlighted
-                    ? 'bg-teal-50 border-l-4 border-teal-600'
-                    : 'hover:bg-slate-50'
+                    ? 'bg-gold-50/70 border-l-4 border-gold-600'
+                    : 'hover:bg-beige-50/70'
                 }`}
               >
                 <div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-bold text-slate-900">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-ink-900 text-sm">
                       {item.brand_name}
                     </span>
-                    <span className="text-[11px] font-semibold px-1.5 py-0.2 rounded bg-slate-100 text-slate-700">
+                    <span className="text-[11px] font-semibold px-2 py-0.5 rounded-lg bg-beige-100 text-ink-700 border border-beige-200">
                       {item.dosage_form}
                     </span>
-                    <span className="text-[11px] text-slate-600 font-medium">
+                    <span className="text-xs font-mono font-medium text-gold-700">
                       {item.strength}
                     </span>
                     {item.is_custom && (
-                      <span className="text-[9px] bg-amber-100 text-amber-800 px-1 rounded font-semibold">
+                      <span className="text-[9px] bg-amber-50 text-amber-800 border border-amber-300 px-1.5 rounded-full font-semibold">
                         Custom
                       </span>
                     )}
                   </div>
-                  <div className="text-[11px] text-slate-500 mt-0.5">
+                  <div className="text-[11px] text-ink-500 mt-1">
                     Generic:{' '}
-                    <strong className="text-slate-700">
+                    <strong className="text-ink-800">
                       {item.generic_name}
                     </strong>
-                    <span className="mx-1 text-slate-300">&middot;</span>
-                    <span className="text-slate-500">
+                    <span className="mx-1.5 text-beige-400">&middot;</span>
+                    <span className="text-ink-600">
                       {item.manufacturer_name}
                     </span>
                   </div>
@@ -223,11 +223,11 @@ export default function RxMedicineSearch({ onAddDrug }: RxMedicineSearchProps) {
 
                 <div className="text-right">
                   {isHighlighted ? (
-                    <span className="text-[10px] font-semibold text-teal-700 bg-teal-100/80 px-2 py-0.5 rounded">
+                    <span className="text-xs font-semibold text-gold-800 bg-gold-100 px-2.5 py-1 rounded-lg border border-gold-300 shadow-xs">
                       ↵ Add Rx
                     </span>
                   ) : item.pack_price_bdt ? (
-                    <span className="text-[11px] font-mono text-slate-400">
+                    <span className="text-xs font-mono text-ink-600">
                       ৳{item.pack_price_bdt.toFixed(2)}
                     </span>
                   ) : null}
@@ -240,12 +240,12 @@ export default function RxMedicineSearch({ onAddDrug }: RxMedicineSearchProps) {
           {searchResults?.siblings &&
             searchResults.siblings.items.length > 0 && (
               <>
-                <div className="bg-teal-50/70 px-3 py-1 text-[10px] font-bold text-teal-900 flex items-center justify-between">
+                <div className="bg-beige-50 px-4 py-1.5 text-[10px] font-bold text-gold-800 flex items-center justify-between">
                   <span>
                     Alternatives with Same Generic (
                     {searchResults.siblings.generic_name})
                   </span>
-                  <span className="text-[9px] font-normal text-teal-700">
+                  <span className="text-[10px] font-normal text-ink-500">
                     Alternatives
                   </span>
                 </div>
@@ -258,32 +258,32 @@ export default function RxMedicineSearch({ onAddDrug }: RxMedicineSearchProps) {
                       key={`sib-${item.id}`}
                       onClick={() => handleSelectDrug(item)}
                       onMouseEnter={() => setSelectedIndex(overallIdx)}
-                      className={`px-3 py-1.5 cursor-pointer flex items-center justify-between text-xs transition-colors ${
+                      className={`px-4 py-2.5 cursor-pointer flex items-center justify-between text-xs transition-colors ${
                         isHighlighted
-                          ? 'bg-teal-50 border-l-4 border-teal-600'
-                          : 'hover:bg-slate-50'
+                          ? 'bg-gold-50/70 border-l-4 border-gold-600'
+                          : 'hover:bg-beige-50/70'
                       }`}
                     >
                       <div>
-                        <div className="flex items-center gap-1.5">
-                          <span className="font-semibold text-slate-800">
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-ink-800">
                             {item.brand_name}
                           </span>
-                          <span className="text-[10px] px-1 rounded bg-slate-100 text-slate-600">
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-beige-100 text-ink-600 border border-beige-200">
                             {item.dosage_form}
                           </span>
-                          <span className="text-[10px] text-slate-500">
+                          <span className="text-[10px] text-gold-700 font-mono">
                             {item.strength}
                           </span>
                         </div>
-                        <p className="text-[10px] text-slate-400">
+                        <p className="text-[10px] text-ink-500 mt-0.5">
                           {item.manufacturer_name}
                         </p>
                       </div>
 
                       <div className="text-right">
                         {isHighlighted && (
-                          <span className="text-[10px] font-semibold text-teal-700 bg-teal-100/80 px-2 py-0.5 rounded">
+                          <span className="text-xs font-semibold text-gold-800 bg-gold-100 px-2.5 py-1 rounded-lg border border-gold-300 shadow-xs">
                             ↵ Add
                           </span>
                         )}
@@ -298,17 +298,16 @@ export default function RxMedicineSearch({ onAddDrug }: RxMedicineSearchProps) {
           {query.trim() && (
             <div
               onClick={() => handleAddFreeText(query)}
-              className="px-3 py-2 bg-slate-50 hover:bg-teal-50 cursor-pointer flex items-center justify-between text-xs text-slate-700 border-t border-slate-200"
+              className="px-4 py-3 bg-beige-50/80 hover:bg-gold-50 cursor-pointer flex items-center justify-between text-xs text-ink-700 border-t border-beige-200 transition-colors"
             >
-              <div className="flex items-center gap-1.5">
-                <Plus className="w-3.5 h-3.5 text-teal-600" />
+              <div className="flex items-center gap-2">
+                <Plus className="w-4 h-4 text-gold-600" />
                 <span>
-                  Add{' '}
-                  <strong className="text-slate-900">"{query.trim()}"</strong>{' '}
+                  Add <strong className="text-ink-900">"{query.trim()}"</strong>{' '}
                   as free-text medicine
                 </span>
               </div>
-              <span className="text-[10px] font-mono text-slate-400">
+              <span className="text-[11px] font-mono text-gold-800 bg-white px-2 py-0.5 rounded border border-beige-300">
                 Press Enter
               </span>
             </div>

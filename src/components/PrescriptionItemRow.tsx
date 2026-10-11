@@ -119,34 +119,34 @@ export default function PrescriptionItemRow({
   return (
     <div
       ref={rowRef}
-      className="p-3.5 bg-white border border-slate-200/90 rounded-xl hover:border-teal-300 transition-all shadow-xs"
+      className="bezel-card p-5 bg-white space-y-3.5 border border-beige-300 hover:border-gold-400 transition-all shadow-xs group"
     >
       {/* Row Header: Position, Medicine Title, Generic, and Remove Button */}
-      <div className="flex items-start justify-between gap-3 pb-2 border-b border-slate-100">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="w-5 h-5 rounded-md bg-teal-50 text-teal-700 font-bold text-[11px] flex items-center justify-center shrink-0 border border-teal-200">
+      <div className="flex items-start justify-between gap-3 pb-2.5 border-b border-beige-300">
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <span className="w-6 h-6 rounded-lg bg-gold-50 text-gold-700 font-semibold text-xs flex items-center justify-center shrink-0 border border-gold-200 shadow-xs">
             {index + 1}
           </span>
-          <span className="font-bold text-sm text-slate-900 tracking-tight">
+          <span className="font-bold text-base text-ink-900 tracking-tight">
             {displayName}
           </span>
           {item.form_snapshot && (
-            <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded bg-slate-100 text-slate-700">
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-lg bg-beige-100 text-ink-700 border border-beige-200">
               {item.form_snapshot}
             </span>
           )}
           {item.strength_snapshot && (
-            <span className="text-[11px] font-medium text-slate-600">
+            <span className="text-xs font-mono font-medium text-gold-700">
               {item.strength_snapshot}
             </span>
           )}
           {item.generic_snapshot && (
-            <span className="text-[11px] text-slate-500 italic">
+            <span className="text-xs text-ink-500 italic font-mono">
               ({item.generic_snapshot})
             </span>
           )}
           {!item.brand_id && (
-            <span className="text-[10px] bg-amber-50 text-amber-700 border border-amber-200 px-1.5 py-0.2 rounded font-medium">
+            <span className="text-[10px] bg-amber-50 text-amber-800 border border-amber-300 px-2 py-0.5 rounded-full font-medium">
               Free-text
             </span>
           )}
@@ -156,11 +156,11 @@ export default function PrescriptionItemRow({
             <button
               type="button"
               onClick={handleFetchSiblings}
-              className="inline-flex items-center gap-1 text-[10px] font-semibold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200 px-2 py-0.5 rounded-full transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-gold-700 bg-gold-50 hover:bg-gold-100 border border-gold-300 px-3 py-0.5 rounded-full transition-all cursor-pointer shadow-xs"
               title="Show other brands for this generic"
             >
               <RefreshCw
-                className={`w-2.5 h-2.5 ${isSearchingSiblings ? 'animate-spin' : ''}`}
+                className={`w-3 h-3 ${isSearchingSiblings ? 'animate-spin' : ''}`}
               />
               <span>{showSiblings ? 'Close Alternatives' : 'Swap Brand'}</span>
             </button>
@@ -170,39 +170,39 @@ export default function PrescriptionItemRow({
         <button
           type="button"
           onClick={() => onRemove(index)}
-          className="text-slate-400 hover:text-rose-600 p-1 rounded hover:bg-rose-50 transition-colors cursor-pointer shrink-0"
+          className="text-ink-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-colors cursor-pointer shrink-0"
           title="Remove medicine"
         >
-          <Trash2 className="w-3.5 h-3.5" />
+          <Trash2 className="w-4 h-4" />
         </button>
       </div>
 
       {/* Sibling Alternative Brands List Drawer */}
       {showSiblings && (
-        <div className="mt-2 mb-2 p-2.5 bg-teal-50/60 border border-teal-200 rounded-lg text-xs space-y-1.5">
-          <div className="flex items-center justify-between text-[11px] font-bold text-teal-900 pb-1 border-b border-teal-200/60">
+        <div className="mt-2 mb-2 p-3.5 bg-ivory-50 border border-beige-300 rounded-xl text-xs space-y-2">
+          <div className="flex items-center justify-between text-xs font-bold text-gold-800 pb-1.5 border-b border-beige-200">
             <span>Equivalent Brands ({item.generic_snapshot})</span>
-            <span className="text-[10px] font-normal text-teal-700">
-              Click to swap
+            <span className="text-[10px] font-normal text-ink-500">
+              Click to swap instantly
             </span>
           </div>
 
           {siblingResults.length === 0 ? (
-            <p className="text-[11px] text-teal-700 py-1">
+            <p className="text-xs text-ink-500 py-1">
               No other alternative companies found in catalog.
             </p>
           ) : (
-            <div className="flex flex-wrap gap-1.5 pt-1">
+            <div className="flex flex-wrap gap-2 pt-1">
               {siblingResults.slice(0, 8).map((sib) => (
                 <button
                   key={sib.id}
                   type="button"
                   onClick={() => handleSwap(sib)}
-                  className="px-2 py-1 bg-white hover:bg-teal-600 hover:text-white border border-teal-200 rounded-md text-[11px] font-medium text-slate-800 transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                  className="px-2.5 py-1.5 bg-white hover:bg-gold-600 hover:text-white border border-beige-300 rounded-lg text-xs font-medium text-ink-800 transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
                   title={`${sib.dosage_form} ${sib.strength} by ${sib.manufacturer_name}`}
                 >
                   <span className="font-bold">{sib.brand_name}</span>
-                  <span className="text-[9px] opacity-75">
+                  <span className="text-[10px] opacity-75">
                     ({sib.manufacturer_name})
                   </span>
                 </button>
@@ -213,10 +213,10 @@ export default function PrescriptionItemRow({
       )}
 
       {/* Inputs Grid */}
-      <div className="grid grid-cols-12 gap-2 pt-2.5 items-start">
+      <div className="grid grid-cols-12 gap-3.5 pt-2 items-start">
         {/* Dose (col-span-3) */}
         <div className="col-span-3">
-          <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-0.5">
+          <label className="block text-[10px] font-bold uppercase tracking-wider text-ink-500 mb-1">
             Dose (e.g. 101, 1+0+1)
           </label>
           <input
@@ -227,19 +227,19 @@ export default function PrescriptionItemRow({
             onBlur={handleDoseBlur}
             onKeyDown={handleDoseKeyDown}
             placeholder="1+0+1"
-            className="w-full px-2 py-1 text-xs font-mono font-semibold bg-white border border-slate-300 rounded focus:outline-none focus:border-teal-600 focus:ring-1 focus:ring-teal-600 text-slate-900"
+            className="w-full h-10 px-3 text-xs font-mono font-bold bg-ivory-50 border border-beige-300 rounded-xl focus:outline-none focus:border-gold-600 focus:ring-1 focus:ring-gold-500/30 text-ink-900"
           />
           {/* Quick dose buttons */}
-          <div className="flex flex-wrap gap-1 mt-1">
+          <div className="flex flex-wrap gap-1 mt-1.5">
             {QUICK_DOSES.map((d) => (
               <button
                 key={d}
                 type="button"
                 onClick={() => onUpdate(index, { dose: d })}
-                className={`text-[10px] font-mono px-1 py-0.2 rounded border transition-colors cursor-pointer ${
+                className={`text-[10px] font-mono px-1.5 py-0.5 rounded-md border transition-all cursor-pointer ${
                   item.dose === d
-                    ? 'bg-teal-50 text-teal-700 border-teal-300 font-bold'
-                    : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                    ? 'bg-gold-50 text-gold-800 border-gold-300 font-bold shadow-xs'
+                    : 'bg-beige-100 text-ink-600 border-beige-200 hover:text-ink-900 hover:bg-white'
                 }`}
               >
                 {d}
@@ -247,7 +247,7 @@ export default function PrescriptionItemRow({
             ))}
           </div>
           {BENGALI_DOSE_HINTS[item.dose] && (
-            <span className="text-[10px] text-teal-700 font-bangla block mt-1">
+            <span className="text-[11px] text-gold-700 font-bangla block mt-1">
               {BENGALI_DOSE_HINTS[item.dose]}
             </span>
           )}
@@ -255,7 +255,7 @@ export default function PrescriptionItemRow({
 
         {/* Meal Timing (col-span-3) */}
         <div className="col-span-3">
-          <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-0.5">
+          <label className="block text-[10px] font-bold uppercase tracking-wider text-ink-500 mb-1">
             Meal Timing
           </label>
           <select
@@ -263,26 +263,28 @@ export default function PrescriptionItemRow({
             onChange={(e) =>
               onUpdate(index, { meal_timing: e.target.value || null })
             }
-            className="w-full px-2 py-1 text-xs bg-white border border-slate-300 rounded focus:outline-none focus:border-teal-600 text-slate-800"
+            className="w-full h-10 px-2.5 text-xs bg-ivory-50 border border-beige-300 rounded-xl focus:outline-none focus:border-gold-600 text-ink-900"
           >
-            <option value="">Select timing...</option>
+            <option value="" className="bg-white">
+              Select timing...
+            </option>
             {MEAL_TIMINGS.map((m) => (
-              <option key={m.value} value={m.value}>
+              <option key={m.value} value={m.value} className="bg-white">
                 {m.label}
               </option>
             ))}
           </select>
           {/* Quick buttons */}
-          <div className="flex flex-wrap gap-1 mt-1">
+          <div className="flex flex-wrap gap-1 mt-1.5">
             {MEAL_TIMINGS.map((m) => (
               <button
                 key={m.value}
                 type="button"
                 onClick={() => onUpdate(index, { meal_timing: m.value })}
-                className={`text-[9px] px-1 py-0.2 rounded border transition-colors cursor-pointer ${
+                className={`text-[10px] px-1.5 py-0.5 rounded-md border transition-all cursor-pointer ${
                   item.meal_timing === m.value
-                    ? 'bg-teal-50 text-teal-700 border-teal-300 font-semibold'
-                    : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                    ? 'bg-gold-50 text-gold-800 border-gold-300 font-semibold shadow-xs'
+                    : 'bg-beige-100 text-ink-600 border-beige-200 hover:text-ink-900 hover:bg-white'
                 }`}
               >
                 {m.value.split(' ')[0]}
@@ -293,7 +295,7 @@ export default function PrescriptionItemRow({
 
         {/* Duration (col-span-3) */}
         <div className="col-span-3">
-          <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-0.5">
+          <label className="block text-[10px] font-bold uppercase tracking-wider text-ink-500 mb-1">
             Duration
           </label>
           <input
@@ -303,19 +305,19 @@ export default function PrescriptionItemRow({
               onUpdate(index, { duration: e.target.value || null })
             }
             placeholder="e.g. 7 days"
-            className="w-full px-2 py-1 text-xs bg-white border border-slate-300 rounded focus:outline-none focus:border-teal-600 text-slate-800"
+            className="w-full h-10 px-3 text-xs bg-ivory-50 border border-beige-300 rounded-xl focus:outline-none focus:border-gold-600 text-ink-900"
           />
           {/* Quick duration presets */}
-          <div className="flex flex-wrap gap-1 mt-1">
+          <div className="flex flex-wrap gap-1 mt-1.5">
             {DURATION_PRESETS.map((dur) => (
               <button
                 key={dur}
                 type="button"
                 onClick={() => onUpdate(index, { duration: dur })}
-                className={`text-[9px] px-1 py-0.2 rounded border transition-colors cursor-pointer ${
+                className={`text-[10px] px-1.5 py-0.5 rounded-md border transition-all cursor-pointer ${
                   item.duration === dur
-                    ? 'bg-teal-50 text-teal-700 border-teal-300 font-semibold'
-                    : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                    ? 'bg-gold-50 text-gold-800 border-gold-300 font-semibold shadow-xs'
+                    : 'bg-beige-100 text-ink-600 border-beige-200 hover:text-ink-900 hover:bg-white'
                 }`}
               >
                 {dur}
@@ -326,7 +328,7 @@ export default function PrescriptionItemRow({
 
         {/* Note / Special Instructions (col-span-3) */}
         <div className="col-span-3">
-          <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-0.5">
+          <label className="block text-[10px] font-bold uppercase tracking-wider text-ink-500 mb-1">
             Instructions / Note
           </label>
           <input
@@ -334,7 +336,7 @@ export default function PrescriptionItemRow({
             value={item.note || ''}
             onChange={(e) => onUpdate(index, { note: e.target.value || null })}
             placeholder="e.g. If fever > 101°F"
-            className="w-full px-2 py-1 text-xs bg-white border border-slate-300 rounded focus:outline-none focus:border-teal-600 text-slate-800"
+            className="w-full h-10 px-3 text-xs bg-ivory-50 border border-beige-300 rounded-xl focus:outline-none focus:border-gold-600 text-ink-900 placeholder-ink-400"
           />
         </div>
       </div>

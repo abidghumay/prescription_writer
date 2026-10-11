@@ -110,22 +110,22 @@ export default function DrugSearchPage() {
     <>
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Header Card */}
-        <div className="bg-white border border-slate-200 shadow-sm rounded-xl p-6">
+        <div className="bg-white border border-studio-border shadow-xs rounded-2xl p-6">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <h2 className="text-lg font-bold text-slate-800">
+              <h2 className="text-lg font-bold text-ink-900">
                 Inline Medicine Search & Autocomplete
               </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-ink-500 mt-0.5">
                 Type to search &middot; Use{' '}
-                <kbd className="px-1.5 py-0.5 bg-slate-100 border rounded text-[11px] font-mono text-slate-700">
+                <kbd className="px-1.5 py-0.5 bg-beige-100 border border-beige-300 rounded text-[11px] font-mono text-ink-800">
                   ↑
                 </kbd>{' '}
-                <kbd className="px-1.5 py-0.5 bg-slate-100 border rounded text-[11px] font-mono text-slate-700">
+                <kbd className="px-1.5 py-0.5 bg-beige-100 border border-beige-300 rounded text-[11px] font-mono text-ink-800">
                   ↓
                 </kbd>{' '}
                 to move &middot; Press{' '}
-                <kbd className="px-1.5 py-0.5 bg-slate-100 border rounded text-[11px] font-mono text-slate-700">
+                <kbd className="px-1.5 py-0.5 bg-beige-100 border border-beige-300 rounded text-[11px] font-mono text-ink-800">
                   Enter
                 </kbd>{' '}
                 to select
@@ -133,17 +133,15 @@ export default function DrugSearchPage() {
             </div>
             <button
               onClick={() => setShowAddCustom(true)}
-              className="px-3 py-1.5 text-xs font-semibold rounded-md bg-teal-600 text-white hover:bg-teal-700 transition-colors shadow-sm"
+              className="px-3.5 py-2 text-xs font-semibold rounded-xl bg-gold-600 text-white hover:bg-gold-700 active:bg-gold-800 transition-colors shadow-xs cursor-pointer"
             >
               + Add Custom Brand
             </button>
           </div>
 
           {/* Quick Sample Queries */}
-          <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100">
-            <span className="text-xs text-slate-400 font-medium">
-              Try test:
-            </span>
+          <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-beige-200">
+            <span className="text-xs text-ink-500 font-medium">Try test:</span>
             {[
               { label: '"napa"', val: 'napa' },
               { label: '"paracitamol" (typo)', val: 'paracitamol' },
@@ -159,7 +157,7 @@ export default function DrugSearchPage() {
                   setSelectedDrug(null);
                   inputRef.current?.focus();
                 }}
-                className="px-2.5 py-1 text-xs rounded-full bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-600 border border-slate-200 transition-colors"
+                className="px-2.5 py-1 text-xs rounded-full bg-beige-100 hover:bg-gold-50 hover:text-gold-900 text-ink-700 border border-beige-300 transition-colors cursor-pointer"
               >
                 {t.label}
               </button>
@@ -180,13 +178,13 @@ export default function DrugSearchPage() {
                 onKeyDown={handleKeyDown}
                 placeholder="Type brand or generic (e.g. napa, paracetamol, seclo)..."
                 autoFocus
-                className="w-full px-4 py-3.5 pl-11 text-base rounded-lg border-2 border-slate-300 focus:outline-none focus:border-teal-600 font-medium text-slate-800 shadow-sm transition-all"
+                className="w-full px-4 py-3.5 pl-11 text-base rounded-xl border-2 border-beige-300 focus:outline-none focus:border-gold-600 bg-ivory-50 font-medium text-ink-900 shadow-xs transition-all"
               />
-              <div className="absolute left-3.5 text-slate-400 font-bold text-base">
+              <div className="absolute left-3.5 text-ink-400 font-bold text-base">
                 🔍
               </div>
               {isSearching && (
-                <div className="absolute right-3.5 text-xs text-teal-600 animate-pulse font-medium">
+                <div className="absolute right-3.5 text-xs text-gold-700 animate-pulse font-medium">
                   Searching...
                 </div>
               )}
@@ -194,10 +192,10 @@ export default function DrugSearchPage() {
 
             {/* Status line */}
             {searchResults && (
-              <div className="flex items-center justify-between mt-2 text-xs text-slate-400 px-1">
+              <div className="flex items-center justify-between mt-2 text-xs text-ink-500 px-1">
                 <span>
                   Found{' '}
-                  <strong className="text-slate-700">
+                  <strong className="text-ink-800">
                     {searchResults.matches.length}
                   </strong>{' '}
                   matches
@@ -207,7 +205,7 @@ export default function DrugSearchPage() {
                 </span>
                 <span>
                   Latency:{' '}
-                  <strong className="text-emerald-600 font-mono">
+                  <strong className="text-emerald-700 font-mono">
                     {searchResults.duration_ms} ms
                   </strong>{' '}
                   (FTS5)
@@ -219,12 +217,12 @@ export default function DrugSearchPage() {
             {searchResults && allNavigableItems.length > 0 && (
               <div
                 ref={listRef}
-                className="mt-2 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden divide-y divide-slate-100 max-h-[440px] overflow-y-auto z-20"
+                className="mt-2 bg-white border border-studio-border rounded-xl shadow-lg overflow-hidden divide-y divide-beige-200 max-h-[440px] overflow-y-auto z-20"
               >
                 {/* SECTION 1: DIRECT MATCHES */}
-                <div className="bg-slate-50/80 px-4 py-2 border-b border-slate-200/80 flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                <div className="bg-beige-50 px-4 py-2 border-b border-beige-200 flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-ink-500">
                   <span>Direct Matches</span>
-                  <span className="font-normal lowercase text-slate-400">
+                  <span className="font-normal lowercase text-ink-400">
                     ↑↓ to navigate &middot; Enter to select
                   </span>
                 </div>
@@ -238,35 +236,35 @@ export default function DrugSearchPage() {
                       onMouseEnter={() => setSelectedIndex(idx)}
                       className={`px-4 py-3 cursor-pointer transition-colors flex items-center justify-between ${
                         isHighlighted
-                          ? 'bg-teal-50 border-l-4 border-teal-600 pl-3'
-                          : 'hover:bg-slate-50'
+                          ? 'bg-gold-50/70 border-l-4 border-gold-600 pl-3'
+                          : 'hover:bg-beige-50/60'
                       }`}
                     >
                       <div className="space-y-0.5">
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-base text-slate-900">
+                          <span className="font-bold text-base text-ink-900">
                             {item.brand_name}
                           </span>
-                          <span className="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700">
+                          <span className="text-xs font-semibold px-2 py-0.5 rounded bg-beige-100 text-ink-700">
                             {item.dosage_form}
                           </span>
-                          <span className="text-xs text-slate-600 font-medium">
+                          <span className="text-xs text-ink-600 font-medium">
                             {item.strength}
                           </span>
                           {item.is_custom && (
-                            <span className="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-semibold">
+                            <span className="text-[10px] bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded font-semibold border border-amber-200">
                               Custom
                             </span>
                           )}
                         </div>
-                        <div className="text-xs text-slate-500">
+                        <div className="text-xs text-ink-500">
                           Generic:{' '}
-                          <strong className="text-slate-700">
+                          <strong className="text-ink-800">
                             {item.generic_name}
                           </strong>
-                          <span className="mx-2 text-slate-300">|</span>
+                          <span className="mx-2 text-beige-300">|</span>
                           Mfr:{' '}
-                          <span className="text-slate-600">
+                          <span className="text-ink-600">
                             {item.manufacturer_name}
                           </span>
                         </div>
@@ -274,12 +272,12 @@ export default function DrugSearchPage() {
 
                       <div className="text-right flex flex-col items-end gap-1">
                         {isHighlighted && (
-                          <span className="text-[11px] font-semibold text-teal-700 bg-teal-100/80 px-2 py-0.5 rounded flex items-center gap-1">
+                          <span className="text-[11px] font-semibold text-gold-800 bg-gold-100 px-2 py-0.5 rounded flex items-center gap-1 border border-gold-300">
                             ↵ Enter to select
                           </span>
                         )}
                         {item.pack_price_bdt && (
-                          <span className="text-xs font-mono text-slate-500">
+                          <span className="text-xs font-mono text-ink-500">
                             ৳{item.pack_price_bdt.toFixed(2)}
                           </span>
                         )}
@@ -292,13 +290,13 @@ export default function DrugSearchPage() {
                 {searchResults.siblings &&
                   searchResults.siblings.items.length > 0 && (
                     <>
-                      <div className="bg-teal-50/70 px-4 py-2 border-t border-b border-teal-200/70 flex items-center justify-between text-[11px] font-bold text-teal-900">
+                      <div className="bg-sand-100 px-4 py-2 border-t border-b border-beige-300 flex items-center justify-between text-[11px] font-bold text-ink-800">
                         <span className="flex items-center gap-1.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+                          <span className="w-1.5 h-1.5 rounded-full bg-gold-600"></span>
                           Same Generic ({searchResults.siblings.generic_name}{' '}
                           {searchResults.siblings.strength}) — Other Companies
                         </span>
-                        <span className="text-[10px] text-teal-700 font-normal">
+                        <span className="text-[10px] text-gold-800 font-medium bg-gold-100 px-2 py-0.5 rounded">
                           Alternatives
                         </span>
                       </div>
@@ -314,35 +312,35 @@ export default function DrugSearchPage() {
                             onMouseEnter={() => setSelectedIndex(overallIndex)}
                             className={`px-4 py-2.5 cursor-pointer transition-colors flex items-center justify-between ${
                               isHighlighted
-                                ? 'bg-teal-50 border-l-4 border-teal-600 pl-3'
-                                : 'hover:bg-slate-50'
+                                ? 'bg-gold-50/70 border-l-4 border-gold-600 pl-3'
+                                : 'hover:bg-beige-50/60'
                             }`}
                           >
                             <div className="space-y-0.5">
                               <div className="flex items-center gap-2">
-                                <span className="font-semibold text-sm text-slate-800">
+                                <span className="font-semibold text-sm text-ink-900">
                                   {item.brand_name}
                                 </span>
-                                <span className="text-xs text-slate-500">
+                                <span className="text-xs text-ink-600">
                                   {item.strength}
                                 </span>
-                                <span className="text-[11px] px-1.5 py-0.2 rounded bg-slate-100 text-slate-600">
+                                <span className="text-[11px] px-1.5 py-0.2 rounded bg-beige-100 text-ink-700">
                                   {item.dosage_form}
                                 </span>
                               </div>
-                              <p className="text-[11px] text-slate-400">
+                              <p className="text-[11px] text-ink-400">
                                 {item.manufacturer_name}
                               </p>
                             </div>
 
                             <div className="text-right flex items-center gap-2">
                               {isHighlighted && (
-                                <span className="text-[11px] font-semibold text-teal-700 bg-teal-100/80 px-2 py-0.5 rounded">
+                                <span className="text-[11px] font-semibold text-gold-800 bg-gold-100 px-2 py-0.5 rounded border border-gold-300">
                                   ↵ Select
                                 </span>
                               )}
                               {item.pack_price_bdt && (
-                                <span className="text-xs font-mono text-slate-400">
+                                <span className="text-xs font-mono text-ink-500">
                                   ৳{item.pack_price_bdt.toFixed(2)}
                                 </span>
                               )}
@@ -358,19 +356,19 @@ export default function DrugSearchPage() {
 
           {/* SELECTED MEDICINE CONFIRMATION CARD */}
           {selectedDrug && (
-            <div className="mt-6 p-4 rounded-xl bg-emerald-50 border-2 border-emerald-300 shadow-sm">
+            <div className="mt-6 p-4 rounded-xl bg-gold-50/70 border-2 border-gold-300 shadow-xs">
               <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
+                    <span className="text-xs font-bold uppercase tracking-wider text-gold-900 bg-gold-200/80 px-2 py-0.5 rounded">
                       ✓ Selected for Prescription
                     </span>
-                    <h3 className="text-base font-bold text-emerald-950">
+                    <h3 className="text-base font-bold text-ink-950">
                       {selectedDrug.brand_name} {selectedDrug.strength}{' '}
                       {selectedDrug.dosage_form}
                     </h3>
                   </div>
-                  <p className="text-xs text-emerald-800 mt-1">
+                  <p className="text-xs text-ink-700 mt-1">
                     Generic: <strong>{selectedDrug.generic_name}</strong>{' '}
                     &middot; Manufacturer: {selectedDrug.manufacturer_name}
                   </p>
@@ -380,24 +378,24 @@ export default function DrugSearchPage() {
                     setSelectedDrug(null);
                     inputRef.current?.focus();
                   }}
-                  className="text-xs text-emerald-700 hover:text-emerald-900 font-medium px-2 py-1 rounded hover:bg-emerald-100"
+                  className="text-xs text-gold-800 hover:text-gold-950 font-medium px-2 py-1 rounded hover:bg-gold-100 transition-colors cursor-pointer"
                 >
                   Clear Selection
                 </button>
               </div>
 
               {/* Flow preview for Phase 2: Dose tokens */}
-              <div className="mt-3 pt-3 border-t border-emerald-200/80 flex items-center gap-3 text-xs text-emerald-900">
-                <span className="font-semibold text-emerald-800">
+              <div className="mt-3 pt-3 border-t border-gold-200/80 flex items-center gap-3 text-xs text-ink-700">
+                <span className="font-semibold text-gold-900">
                   Next in Phase 2:
                 </span>
                 <span>
                   Cursor auto-advances to Dose (e.g. typing{' '}
-                  <code className="bg-white px-1.5 py-0.5 rounded font-mono font-bold text-teal-800">
+                  <code className="bg-white px-1.5 py-0.5 rounded font-mono font-bold text-gold-800 border border-gold-200">
                     101
                   </code>{' '}
                   expands to{' '}
-                  <code className="bg-white px-1.5 py-0.5 rounded font-mono font-bold text-teal-800">
+                  <code className="bg-white px-1.5 py-0.5 rounded font-mono font-bold text-gold-800 border border-gold-200">
                     1+0+1
                   </code>
                   )
@@ -410,19 +408,19 @@ export default function DrugSearchPage() {
 
       {/* Add Custom Drug Modal */}
       {showAddCustom && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-xl border border-slate-200 max-w-md w-full p-6">
-            <h3 className="text-base font-bold text-slate-800 mb-1">
+        <div className="fixed inset-0 bg-ink-950/40 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-xl border border-beige-300 max-w-md w-full p-6">
+            <h3 className="text-base font-bold text-ink-900 mb-1">
               Add Custom Medicine
             </h3>
-            <p className="text-xs text-slate-500 mb-4">
+            <p className="text-xs text-ink-500 mb-4">
               Save a medicine not yet in the official database. It will
               immediately be indexed for autocomplete.
             </p>
 
             <form onSubmit={handleAddCustomDrug} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-ink-700 mb-1">
                   Brand Name *
                 </label>
                 <input
@@ -431,12 +429,12 @@ export default function DrugSearchPage() {
                   value={customBrand}
                   onChange={(e) => setCustomBrand(e.target.value)}
                   placeholder="e.g. MyBrand"
-                  className="w-full px-3 py-2 text-sm border rounded-md focus:ring-2 focus:ring-teal-500 outline-none"
+                  className="w-full px-3 py-2 text-sm border border-beige-300 rounded-xl focus:border-gold-600 focus:ring-1 focus:ring-gold-500 outline-none bg-ivory-50 text-ink-900"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-ink-700 mb-1">
                   Generic Name *
                 </label>
                 <input
@@ -445,13 +443,13 @@ export default function DrugSearchPage() {
                   value={customGeneric}
                   onChange={(e) => setCustomGeneric(e.target.value)}
                   placeholder="e.g. Paracetamol"
-                  className="w-full px-3 py-2 text-sm border rounded-md focus:ring-2 focus:ring-teal-500 outline-none"
+                  className="w-full px-3 py-2 text-sm border border-beige-300 rounded-xl focus:border-gold-600 focus:ring-1 focus:ring-gold-500 outline-none bg-ivory-50 text-ink-900"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-semibold text-ink-700 mb-1">
                     Strength
                   </label>
                   <input
@@ -459,17 +457,17 @@ export default function DrugSearchPage() {
                     value={customStrength}
                     onChange={(e) => setCustomStrength(e.target.value)}
                     placeholder="e.g. 500 mg"
-                    className="w-full px-3 py-2 text-sm border rounded-md focus:ring-2 focus:ring-teal-500 outline-none"
+                    className="w-full px-3 py-2 text-sm border border-beige-300 rounded-xl focus:border-gold-600 focus:ring-1 focus:ring-gold-500 outline-none bg-ivory-50 text-ink-900"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-semibold text-ink-700 mb-1">
                     Form
                   </label>
                   <select
                     value={customForm}
                     onChange={(e) => setCustomForm(e.target.value)}
-                    className="w-full px-3 py-2 text-sm border rounded-md focus:ring-2 focus:ring-teal-500 outline-none bg-white"
+                    className="w-full px-3 py-2 text-sm border border-beige-300 rounded-xl focus:border-gold-600 focus:ring-1 focus:ring-gold-500 outline-none bg-ivory-50 text-ink-900"
                   >
                     <option value="Tablet">Tablet</option>
                     <option value="Capsule">Capsule</option>
@@ -483,7 +481,7 @@ export default function DrugSearchPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-ink-700 mb-1">
                   Manufacturer
                 </label>
                 <input
@@ -491,21 +489,21 @@ export default function DrugSearchPage() {
                   value={customMfr}
                   onChange={(e) => setCustomMfr(e.target.value)}
                   placeholder="e.g. Square / Beximco"
-                  className="w-full px-3 py-2 text-sm border rounded-md focus:ring-2 focus:ring-teal-500 outline-none"
+                  className="w-full px-3 py-2 text-sm border border-beige-300 rounded-xl focus:border-gold-600 focus:ring-1 focus:ring-gold-500 outline-none bg-ivory-50 text-ink-900"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t">
+              <div className="flex justify-end gap-2 pt-3 border-t border-beige-200">
                 <button
                   type="button"
                   onClick={() => setShowAddCustom(false)}
-                  className="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded-md"
+                  className="px-3 py-1.5 text-xs text-ink-600 hover:bg-beige-100 rounded-xl cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 text-xs font-semibold rounded-md bg-teal-600 text-white hover:bg-teal-700"
+                  className="px-4 py-1.5 text-xs font-semibold rounded-xl bg-gold-600 text-white hover:bg-gold-700 active:bg-gold-800 transition-colors shadow-xs cursor-pointer"
                 >
                   Save & Index
                 </button>

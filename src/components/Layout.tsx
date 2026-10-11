@@ -66,14 +66,14 @@ export default function Layout() {
   }, []);
 
   const navItemClass = ({ isActive }: { isActive: boolean }) =>
-    `w-full text-left px-3 py-2 text-xs rounded-lg font-medium transition-all flex items-center gap-2.5 ${
+    `w-full text-left px-3.5 py-2.5 text-xs rounded-xl font-medium transition-all flex items-center gap-3 ${
       isActive
-        ? 'bg-teal-50 text-teal-800 font-bold border border-teal-200/80 shadow-2xs'
-        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+        ? 'bg-white text-gold-700 font-semibold border border-beige-300 shadow-xs'
+        : 'text-ink-600 hover:bg-beige-200/60 hover:text-ink-900 border border-transparent'
     }`;
 
   return (
-    <div className="flex h-screen w-full bg-slate-100/70 text-slate-900 select-none font-sans">
+    <div className="flex h-screen w-full bg-studio-base text-ink-900 select-none font-sans">
       {/* First-Run Onboarding Modal */}
       {!settings.isOnboarded && (
         <OnboardingModal
@@ -85,37 +85,37 @@ export default function Layout() {
       )}
 
       {/* Left Navigation Rail */}
-      <aside className="w-60 border-r border-slate-200 bg-white flex flex-col justify-between p-4 shadow-2xs">
+      <aside className="w-64 border-r border-beige-300 bg-beige-100/90 backdrop-blur-xl flex flex-col justify-between p-4 shadow-sm">
         <div>
-          <div className="flex items-center gap-2.5 mb-6 px-1">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-600 to-teal-800 flex items-center justify-center text-white font-bold text-lg shadow-sm">
+          <div className="flex items-center gap-3 mb-6 px-1.5 pt-1">
+            <div className="w-10 h-10 rounded-xl bg-gold-600 border border-gold-700/30 flex items-center justify-center text-ivory-50 font-bold text-xl shadow-xs shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
               ℞
             </div>
             <div>
-              <h1 className="font-bold text-sm leading-tight text-slate-900 flex items-center gap-1">
+              <h1 className="font-bold text-sm tracking-tight text-ink-900 flex items-center gap-1.5">
                 <span>ProtonRx Next</span>
               </h1>
-              <p className="text-[10px] text-teal-700 font-semibold tracking-wide">
-                Offline Clinical Suite
+              <p className="text-[10px] text-gold-600 font-semibold tracking-wider uppercase">
+                Clinical Atelier
               </p>
             </div>
           </div>
 
-          <nav className="space-y-1">
+          <nav className="space-y-1.5">
             <NavLink to="/" end className={navItemClass}>
-              <FileEdit className="w-4 h-4 text-teal-600" />
+              <FileEdit className="w-4 h-4 text-gold-600 shrink-0" />
               <span>Prescription Canvas</span>
             </NavLink>
             <NavLink to="/search" className={navItemClass}>
-              <Search className="w-4 h-4 text-slate-500" />
+              <Search className="w-4 h-4 text-ink-500 shrink-0" />
               <span>Drug Formulary</span>
             </NavLink>
             <NavLink to="/patients" className={navItemClass}>
-              <Users className="w-4 h-4 text-slate-500" />
+              <Users className="w-4 h-4 text-ink-500 shrink-0" />
               <span>Patient Records</span>
             </NavLink>
             <NavLink to="/settings" className={navItemClass}>
-              <Settings className="w-4 h-4 text-slate-500" />
+              <Settings className="w-4 h-4 text-ink-500 shrink-0" />
               <span>Chamber Settings</span>
             </NavLink>
           </nav>
@@ -124,12 +124,12 @@ export default function Layout() {
         {/* Bottom Section: Doctor Profile + IPC & DB status */}
         <div className="space-y-3">
           {/* Doctor Profile Mini Badge */}
-          <div className="pt-3 border-t border-slate-200">
+          <div className="pt-3 border-t border-beige-300">
             <NavLink
               to="/settings"
-              className="flex items-center gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition-colors group border border-slate-200/60"
+              className="flex items-center gap-2.5 p-2.5 rounded-xl hover:bg-white transition-all group border border-beige-300 hover:border-gold-500/50 bg-white/70 shadow-xs"
             >
-              <div className="w-8 h-8 rounded-full bg-teal-100 text-teal-800 font-bold text-xs flex items-center justify-center shrink-0 border border-teal-200 shadow-2xs">
+              <div className="w-8 h-8 rounded-lg bg-gold-50 text-gold-700 font-bold text-xs flex items-center justify-center shrink-0 border border-gold-200 shadow-inner">
                 {settings.doctorName
                   ? settings.doctorName
                       .replace(/^Dr\.?\s*/i, '')
@@ -138,10 +138,10 @@ export default function Layout() {
                   : 'DR'}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-semibold text-slate-800 truncate group-hover:text-teal-700">
+                <p className="text-xs font-semibold text-ink-900 truncate group-hover:text-gold-700 transition-colors">
                   {settings.doctorName || 'Setup Doctor Profile'}
                 </p>
-                <p className="text-[10px] text-slate-400 truncate">
+                <p className="text-[10px] text-ink-500 truncate">
                   {settings.specialty || 'Offline Account'}
                 </p>
               </div>
@@ -149,37 +149,37 @@ export default function Layout() {
           </div>
 
           {/* Database & IPC Status Card */}
-          <div className="text-xs text-slate-500 space-y-1.5">
-            <div className="flex items-center justify-between px-1">
-              <span>Engine IPC</span>
-              <span className="flex items-center gap-1.5">
+          <div className="text-xs text-ink-600 space-y-2">
+            <div className="flex items-center justify-between px-1 text-[11px]">
+              <span className="font-medium text-ink-600">Engine IPC</span>
+              <span className="flex items-center gap-1.5 font-semibold text-ink-800">
                 <span
                   className={`w-2 h-2 rounded-full ${
                     ipcConnected
-                      ? 'bg-emerald-500 ring-2 ring-emerald-100'
-                      : 'bg-amber-400'
+                      ? 'bg-gold-600 ring-2 ring-gold-200 shadow-xs'
+                      : 'bg-amber-500 ring-2 ring-amber-200'
                   }`}
                 />
                 {ipcConnected ? 'Online' : 'Starting'}
               </span>
             </div>
             {stats && (
-              <div className="bg-slate-50 rounded p-2 text-[11px] space-y-0.5 border border-slate-200/60">
-                <div className="flex justify-between text-slate-600">
+              <div className="bg-white/80 rounded-xl p-2.5 text-[11px] space-y-1 border border-beige-300 shadow-xs">
+                <div className="flex justify-between text-ink-600">
                   <span>Brands:</span>
-                  <span className="font-semibold text-slate-800">
+                  <span className="font-semibold text-ink-900 font-mono">
                     {stats.totalBrands}
                   </span>
                 </div>
-                <div className="flex justify-between text-slate-600">
+                <div className="flex justify-between text-ink-600">
                   <span>Generics:</span>
-                  <span className="font-semibold text-slate-800">
+                  <span className="font-semibold text-ink-900 font-mono">
                     {stats.totalGenerics}
                   </span>
                 </div>
-                <div className="flex justify-between text-slate-600">
+                <div className="flex justify-between text-ink-500 pt-0.5 border-t border-beige-200">
                   <span>Source:</span>
-                  <span className="font-mono text-teal-700">
+                  <span className="font-mono text-gold-700 text-[10px]">
                     {stats.source} ({stats.version})
                   </span>
                 </div>
@@ -190,7 +190,7 @@ export default function Layout() {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto p-8">
+      <main className="flex-1 overflow-y-auto p-8 bg-studio-base">
         <Outlet context={{ settings, stats, refreshStats, updateSettings }} />
       </main>
     </div>

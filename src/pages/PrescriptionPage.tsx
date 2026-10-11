@@ -155,21 +155,21 @@ export default function PrescriptionPage() {
     : null;
 
   return (
-    <div className="max-w-6xl mx-auto space-y-3">
+    <div className="max-w-7xl mx-auto space-y-6 pb-12">
       {/* Chamber Queue HUD - Live Token Stream */}
       <ChamberQueueHUD />
 
       {/* Success Notification Banner */}
       {saveSuccessMsg && (
-        <div className="flex items-center justify-between p-3 bg-emerald-50 border border-emerald-300 rounded-lg text-emerald-900 text-xs">
-          <div className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-emerald-600" />
+        <div className="flex items-center justify-between p-3.5 bg-gold-50 border border-gold-300 rounded-xl text-gold-900 text-xs shadow-xs">
+          <div className="flex items-center gap-2.5">
+            <CheckCircle className="w-4 h-4 text-gold-600" />
             <span className="font-semibold">{saveSuccessMsg}</span>
           </div>
           <button
             type="button"
             onClick={() => setSaveSuccessMsg(null)}
-            className="text-emerald-700 hover:text-emerald-900 font-bold px-2 py-0.5 rounded cursor-pointer"
+            className="text-gold-700 hover:text-gold-900 font-bold px-2 py-0.5 rounded cursor-pointer"
           >
             ×
           </button>
@@ -178,15 +178,15 @@ export default function PrescriptionPage() {
 
       {/* Error Notification Banner */}
       {errorMessage && (
-        <div className="flex items-center justify-between p-3 bg-rose-50 border border-rose-300 rounded-lg text-rose-900 text-xs">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between p-3.5 bg-rose-50 border border-rose-300 rounded-xl text-rose-800 text-xs">
+          <div className="flex items-center gap-2.5">
             <AlertCircle className="w-4 h-4 text-rose-600" />
             <span className="font-semibold">{errorMessage}</span>
           </div>
           <button
             type="button"
             onClick={() => setErrorMessage(null)}
-            className="text-rose-700 hover:text-rose-900 font-bold px-2 py-0.5 rounded cursor-pointer"
+            className="text-rose-600 hover:text-rose-800 font-bold px-2 py-0.5 rounded cursor-pointer"
           >
             ×
           </button>
@@ -194,38 +194,38 @@ export default function PrescriptionPage() {
       )}
 
       {/* Main Prescription Card */}
-      <div className="bg-white border border-slate-200 shadow-sm rounded-xl p-5 min-h-[750px] flex flex-col justify-between">
+      <div className="bezel-card p-8 min-h-[820px] flex flex-col justify-between">
         <div>
           {/* Doctor & Chamber Header */}
-          <div className="border-b border-slate-200 pb-3 mb-3 flex items-start justify-between flex-wrap gap-2">
+          <div className="border-b border-beige-300 pb-5 mb-5 flex items-start justify-between flex-wrap gap-4">
             <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold text-slate-900 tracking-tight">
+              <div className="flex items-center gap-3">
+                <h2 className="text-2xl font-bold text-ink-900 tracking-tight">
                   {settings.doctorName}
                 </h2>
-                <span className="text-[10px] bg-teal-50 text-teal-800 font-semibold px-2 py-0.5 rounded border border-teal-200">
+                <span className="text-[10px] bg-gold-50 text-gold-700 font-semibold px-2.5 py-0.5 rounded-full border border-gold-300">
                   BMDC Verified
                 </span>
               </div>
-              <p className="text-xs text-slate-600 font-medium mt-0.5">
+              <p className="text-xs text-ink-700 font-medium mt-1">
                 {settings.degrees} &middot; {settings.bmdcReg}
               </p>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-ink-500 mt-0.5">
                 {settings.chamberName} &middot; {settings.chamberAddress}
               </p>
             </div>
 
-            <div className="text-right flex flex-col items-end gap-1.5">
-              <div className="flex items-center gap-2">
+            <div className="text-right flex flex-col items-end gap-2.5">
+              <div className="flex items-center gap-2.5">
                 <button
                   type="button"
                   onClick={() => setHistoryDrawerOpen(true)}
-                  className="px-2.5 py-1 text-xs font-semibold text-slate-700 hover:text-teal-700 bg-slate-100 hover:bg-teal-50 rounded-lg border border-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                  className="px-3 py-1.5 text-xs font-semibold text-ink-700 hover:text-gold-700 bg-white hover:bg-beige-100 rounded-xl border border-beige-300 hover:border-gold-400 transition-all flex items-center gap-2 cursor-pointer shadow-xs"
                   title="View previous prescriptions (Ctrl+H)"
                 >
-                  <History className="w-3.5 h-3.5 text-teal-600" />
+                  <History className="w-3.5 h-3.5 text-gold-600" />
                   <span>Past Visits</span>
-                  <kbd className="text-[9px] font-mono text-slate-400 bg-white px-1 py-0.2 rounded border border-slate-200">
+                  <kbd className="text-[9px] font-mono text-ink-500 bg-beige-100 px-1.5 py-0.5 rounded border border-beige-300">
                     ^H
                   </kbd>
                 </button>
@@ -233,27 +233,29 @@ export default function PrescriptionPage() {
                 <button
                   type="button"
                   onClick={() => setPrintStudioOpen(true)}
-                  className="px-2.5 py-1 text-xs font-semibold text-teal-800 hover:text-white bg-teal-50 hover:bg-teal-600 rounded-lg border border-teal-200 transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                  className="px-3 py-1.5 text-xs font-semibold text-gold-800 hover:text-gold-900 bg-gold-50 hover:bg-gold-100/80 rounded-xl border border-gold-300 transition-all flex items-center gap-2 cursor-pointer shadow-xs"
                   title="Open live paper print studio (Ctrl+P)"
                 >
-                  <Printer className="w-3.5 h-3.5 text-teal-600 group-hover:text-white" />
+                  <Printer className="w-3.5 h-3.5 text-gold-600" />
                   <span>Print Studio</span>
-                  <kbd className="text-[9px] font-mono text-teal-700 bg-white px-1 py-0.2 rounded border border-teal-200">
+                  <kbd className="text-[9px] font-mono text-gold-700 bg-gold-100 px-1.5 py-0.5 rounded border border-gold-300">
                     ^P
                   </kbd>
                 </button>
               </div>
 
-              <div className="flex items-center gap-1.5 text-xs text-slate-600 justify-end">
-                <Calendar className="w-3.5 h-3.5 text-teal-600" />
-                <span className="font-semibold text-[11px]">Visit Date:</span>
+              <div className="flex items-center gap-2 text-xs text-ink-700 justify-end">
+                <Calendar className="w-3.5 h-3.5 text-gold-600" />
+                <span className="font-semibold text-[11px] text-ink-500">
+                  Visit Date:
+                </span>
                 <input
                   type="date"
                   value={visitDate}
                   onChange={(e) =>
                     updateClinical({ visitDate: e.target.value })
                   }
-                  className="px-1.5 py-0.5 text-xs bg-slate-50 border border-slate-200 rounded font-mono text-slate-800 focus:outline-none focus:border-teal-600"
+                  className="px-2.5 py-1 text-xs bg-white border border-beige-300 rounded-lg font-mono text-ink-900 focus:outline-none focus:border-gold-600 focus:ring-1 focus:ring-gold-500/30"
                 />
               </div>
             </div>
@@ -263,30 +265,32 @@ export default function PrescriptionPage() {
           <PatientBanner />
 
           {/* Clinical Templates Bar (1-Click Prescriptions) */}
-          <PrescriptionTemplatesBar />
+          <div className="pt-2">
+            <PrescriptionTemplatesBar />
+          </div>
 
           {/* 2-Column Clinical Layout */}
-          <div className="grid grid-cols-12 gap-6 pt-2">
+          <div className="grid grid-cols-12 gap-8 pt-6">
             {/* Left Column: Sub-feature 4 (w-5/12) */}
-            <div className="col-span-5 border-r border-slate-100 pr-5">
+            <div className="col-span-5 border-r border-beige-300/80 pr-6">
               <ClinicalNotes />
             </div>
 
             {/* Right Column: Sub-feature 5, 6, 7 (w-7/12) */}
-            <div className="col-span-7 space-y-3">
+            <div className="col-span-7 space-y-4">
               {/* Rx Header */}
-              <div className="flex items-center justify-between pb-1.5 border-b border-slate-200">
-                <div className="flex items-center gap-2">
-                  <span className="font-serif italic text-xl font-bold text-teal-700">
+              <div className="flex items-center justify-between pb-2 border-b border-beige-300">
+                <div className="flex items-center gap-2.5">
+                  <span className="font-serif italic text-2xl font-bold text-gold-600">
                     ℞
                   </span>
-                  <h3 className="font-bold text-slate-800 uppercase tracking-wide text-[11px]">
+                  <h3 className="font-bold text-ink-900 uppercase tracking-wider text-xs">
                     Prescription Medicines ({items.length})
                   </h3>
                 </div>
-                <span className="text-[10px] text-slate-400">
-                  Search drug below &middot; Enter to add &middot; Inline
-                  alternatives available
+                <span className="text-[10px] text-ink-500">
+                  Search drug below &middot; Enter to add &middot; Instant Brand
+                  Alternatives
                 </span>
               </div>
 
@@ -294,11 +298,11 @@ export default function PrescriptionPage() {
               <DuplicateGenericWarning items={items} />
 
               {/* Medicine List */}
-              <div className="space-y-2.5">
+              <div className="space-y-3.5">
                 {items.length === 0 ? (
-                  <div className="p-8 border-2 border-dashed border-slate-200 rounded-xl text-center text-slate-400 text-xs bg-slate-50/50">
+                  <div className="p-10 border-2 border-dashed border-beige-300 rounded-2xl text-center text-ink-500 text-xs bg-beige-50/50">
                     No medicines prescribed yet. Choose a Quick Template above
-                    or type a drug below.
+                    or search drugs below.
                   </div>
                 ) : (
                   items.map((item, idx) => (
@@ -321,30 +325,30 @@ export default function PrescriptionPage() {
         </div>
 
         {/* Action Bar at Bottom */}
-        <div className="pt-4 mt-5 border-t border-slate-200 flex items-center justify-between text-xs">
+        <div className="pt-6 mt-8 border-t border-beige-300 flex items-center justify-between text-xs">
           {/* Draft Status Indicator */}
-          <div className="flex items-center gap-2 text-slate-500">
+          <div className="flex items-center gap-2 text-ink-500">
             {isSavingDraft ? (
-              <span className="flex items-center gap-1.5 text-teal-600 font-medium">
-                <span className="w-2 h-2 rounded-full bg-teal-600 animate-ping" />
+              <span className="flex items-center gap-2 text-gold-700 font-medium">
+                <span className="w-2 h-2 rounded-full bg-gold-600 animate-ping" />
                 Auto-saving draft...
               </span>
             ) : formattedSavedAt ? (
-              <span className="flex items-center gap-1 text-slate-500">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span className="flex items-center gap-1.5 text-ink-600">
+                <span className="w-2 h-2 rounded-full bg-gold-600 shadow-xs" />
                 Draft saved at {formattedSavedAt}
               </span>
             ) : (
-              <span>Ready</span>
+              <span className="text-ink-500">Ready</span>
             )}
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={handleClear}
-              className="px-3 py-1.5 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-100 flex items-center gap-1.5 font-medium transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-xl border border-beige-300 text-ink-600 hover:text-ink-900 hover:bg-beige-100 flex items-center gap-2 font-medium transition-colors cursor-pointer"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               Clear / New Rx
@@ -353,9 +357,9 @@ export default function PrescriptionPage() {
             <button
               type="button"
               onClick={() => setPrintStudioOpen(true)}
-              className="px-3.5 py-1.5 rounded-lg border border-teal-600 text-teal-700 bg-teal-50 hover:bg-teal-100 flex items-center gap-1.5 font-semibold transition-colors cursor-pointer shadow-2xs"
+              className="px-4 py-2 rounded-xl border border-gold-300 text-gold-800 bg-gold-50 hover:bg-gold-100 flex items-center gap-2 font-medium transition-all cursor-pointer shadow-xs"
             >
-              <Printer className="w-3.5 h-3.5" />
+              <Printer className="w-3.5 h-3.5 text-gold-600" />
               Print Studio (Ctrl+P)
             </button>
 
@@ -363,13 +367,13 @@ export default function PrescriptionPage() {
               type="button"
               onClick={handleFinalize}
               disabled={!name.trim() || items.length === 0 || isFinalizing}
-              className={`px-5 py-2 rounded-lg font-semibold text-white flex items-center gap-2 shadow-sm transition-all cursor-pointer ${
+              className={`px-6 py-2.5 rounded-xl font-semibold text-sm text-white flex items-center gap-2.5 shadow-sm transition-all cursor-pointer ${
                 !name.trim() || items.length === 0 || isFinalizing
-                  ? 'bg-teal-400 opacity-60 cursor-not-allowed'
-                  : 'bg-teal-600 hover:bg-teal-700 active:scale-98'
+                  ? 'bg-beige-200 text-ink-400 cursor-not-allowed border border-beige-300'
+                  : 'bg-gold-600 hover:bg-gold-700 active:bg-gold-800 active:scale-[0.98] border border-gold-500 shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]'
               }`}
             >
-              <Send className="w-3.5 h-3.5" />
+              <Send className="w-4 h-4" />
               {isFinalizing ? 'Finalizing...' : 'Finalize & Save Prescription'}
             </button>
           </div>

@@ -62,20 +62,22 @@ export default function DuplicateGenericWarning({
   };
 
   return (
-    <div className="space-y-2 mb-3">
+    <div className="space-y-2 mb-4">
       {duplicates.map((dup) => (
         <div
           key={dup.generic}
-          className="flex items-start justify-between gap-3 p-3 bg-amber-50 border border-amber-300 rounded-lg text-amber-900 text-xs shadow-xs"
+          className="flex items-start justify-between gap-3 p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-xs shadow-sm"
         >
           <div className="flex items-start gap-2.5">
-            <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+            <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
             <div>
-              <p className="font-bold text-amber-900">
+              <p className="font-bold text-amber-950">
                 Duplicate Generic Warning:{' '}
-                <span className="underline">{dup.generic}</span>
+                <span className="underline decoration-amber-500/50">
+                  {dup.generic}
+                </span>
               </p>
-              <p className="text-amber-800 text-[11px] mt-0.5">
+              <p className="text-amber-800 text-[11px] mt-0.5 leading-relaxed">
                 Prescribed multiple times as{' '}
                 <strong className="text-amber-950 font-semibold">
                   {dup.brands.join(', ')}
@@ -88,7 +90,7 @@ export default function DuplicateGenericWarning({
           <button
             type="button"
             onClick={() => handleDismiss(dup.generic)}
-            className="text-amber-600 hover:text-amber-900 p-0.5 rounded hover:bg-amber-100 transition-colors cursor-pointer shrink-0"
+            className="text-amber-700 hover:text-amber-950 p-1 rounded-lg hover:bg-amber-100/70 transition-colors cursor-pointer shrink-0"
             title="Dismiss warning"
           >
             <X className="w-3.5 h-3.5" />
