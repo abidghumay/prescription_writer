@@ -31,57 +31,13 @@ export default function PatientHistoryDrawer() {
         })
         .catch((err) => {
           console.error('Failed to load patient history:', err);
+          setHistoryList([]);
         })
         .finally(() => {
           setIsLoading(false);
         });
     } else {
-      // Mock history for demo/testing if not in DB yet
-      setHistoryList([
-        {
-          id: 101,
-          patient_id: patientId || 1,
-          visit_date: '2026-09-15',
-          weight_kg: 68,
-          chief_complaints: 'Fever for 2 days, headache, body ache',
-          on_examination: 'Temp: 100.4°F, BP: 120/80 mmHg, Chest: Clear',
-          diagnosis: 'Viral Fever',
-          investigations: 'CBC, Dengue NS1 Ag',
-          advice: 'Rest, plenty of oral fluids, paracetamol for fever',
-          follow_up: 'After 3 days if fever persists',
-          status: 'final',
-          created_at: '2026-09-15T10:30:00Z',
-          finalized_at: '2026-09-15T10:45:00Z',
-          items: [
-            {
-              id: 201,
-              position: 1,
-              brand_id: null,
-              free_text_name: 'Napa (Paracetamol 500mg)',
-              form_snapshot: 'Tablet',
-              strength_snapshot: '500 mg',
-              generic_snapshot: 'Paracetamol',
-              dose: '1+1+1',
-              meal_timing: 'After meal',
-              duration: '3 days',
-              note: null,
-            },
-            {
-              id: 202,
-              position: 2,
-              brand_id: null,
-              free_text_name: 'Alatrol (Cetirizine 10mg)',
-              form_snapshot: 'Tablet',
-              strength_snapshot: '10 mg',
-              generic_snapshot: 'Cetirizine Hydrochloride',
-              dose: '0+0+1',
-              meal_timing: 'After meal',
-              duration: '5 days',
-              note: 'At night',
-            },
-          ],
-        },
-      ]);
+      setHistoryList([]);
     }
   }, [isHistoryDrawerOpen, patientId]);
 

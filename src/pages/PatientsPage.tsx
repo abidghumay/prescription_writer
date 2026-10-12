@@ -8,14 +8,14 @@ import type { LayoutContextType } from '../components/Layout';
 
 const defaultSettings: AppSettings = {
   isOnboarded: false,
-  doctorName: 'Dr. Sample Name',
-  degrees: 'MBBS',
-  bmdcReg: 'BMDC Reg. No. 00000',
+  doctorName: '',
+  degrees: '',
+  bmdcReg: '',
   specialty: 'General Physician',
-  chamberName: 'Sample Chamber',
-  chamberAddress: 'Dhaka, Bangladesh',
-  chamberHours: '5:00 PM - 9:00 PM',
-  chamberPhone: '+880 1700-000000',
+  chamberName: '',
+  chamberAddress: '',
+  chamberHours: '',
+  chamberPhone: '',
   consultationFee: null,
   printHeaderMode: 'full',
 };

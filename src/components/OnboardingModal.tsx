@@ -43,7 +43,7 @@ export default function OnboardingModal({
     initialSettings?.chamberAddress || '',
   );
   const [chamberHours, setChamberHours] = useState(
-    initialSettings?.chamberHours || '5:00 PM - 9:00 PM',
+    initialSettings?.chamberHours || '',
   );
   const [chamberPhone, setChamberPhone] = useState(
     initialSettings?.chamberPhone || '',

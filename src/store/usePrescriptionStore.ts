@@ -8,6 +8,10 @@ import type {
   Prescription,
   BrandSearchResult,
 } from '../shared/types';
+import {
+  isValidBangladeshiPhone,
+  normalizeBangladeshiPhone,
+} from '../shared/validation';
 
 export interface PatientState {
   patientId: number | null;
@@ -112,39 +116,8 @@ export const usePrescriptionStore = create<PrescriptionStoreState>(
     saveSuccessMsg: null,
 
     // Queue & Session Tokens
-    tokens: [
-      {
-        id: 1,
-        token_number: 1,
-        patient_name: 'Anisur Rahman',
-        phone: '01711223344',
-        age: '42y',
-        sex: 'M',
-        status: 'in_consultation',
-        time_in: '05:15 PM',
-      },
-      {
-        id: 2,
-        token_number: 2,
-        patient_name: 'Fatema Begum',
-        phone: '01819876543',
-        age: '35y',
-        sex: 'F',
-        status: 'waiting',
-        time_in: '05:30 PM',
-      },
-      {
-        id: 3,
-        token_number: 3,
-        patient_name: 'Tanvir Ahmed',
-        phone: '01912345678',
-        age: '28y',
-        sex: 'M',
-        status: 'waiting',
-        time_in: '05:45 PM',
-      },
-    ],
-    activeTokenId: 1,
+    tokens: [],
+    activeTokenId: null,
 
     // Modals & Drawers
     isHistoryDrawerOpen: false,
@@ -419,6 +392,25 @@ export const usePrescriptionStore = create<PrescriptionStoreState>(
       if (!state.name.trim()) {
         return { success: false, error: 'Patient name is required' };
       }
+      if (state.phone.trim() && !isValidBangladeshiPhone(state.phone)) {
+        return {
+          success: false,
+          error:
+            'Please enter a valid 11-digit Bangladeshi mobile number (e.g. 017XXXXXXXX)',
+        };
+      }
+      if (state.ageYears !== null && state.ageYears < 0) {
+        return { success: false, error: 'Age cannot be negative' };
+      }
+      if (
+        state.ageMonths !== null &&
+        (state.ageMonths < 0 || state.ageMonths > 11)
+      ) {
+        return { success: false, error: 'Age months must be between 0 and 11' };
+      }
+      if (state.weightKg !== null && state.weightKg <= 0) {
+        return { success: false, error: 'Weight must be greater than 0 kg' };
+      }
       if (state.items.length === 0) {
         return {
           success: false,
@@ -439,7 +431,9 @@ export const usePrescriptionStore = create<PrescriptionStoreState>(
             age_years: state.ageYears,
             age_months: state.ageMonths,
             sex: state.sex,
-            phone: state.phone.trim() || null,
+            phone: state.phone.trim()
+              ? normalizeBangladeshiPhone(state.phone)
+              : null,
             address: state.address.trim() || null,
           });
           patientId = createdPatient.id;

@@ -22,17 +22,18 @@ import PastPrescriptionsView from '../components/PastPrescriptionsView';
 import PatientHistoryDrawer from '../components/PatientHistoryDrawer';
 import PrintStudioModal from '../components/PrintStudioModal';
 import type { PastPrescriptionRecord } from '../shared/types';
+import { isValidBangladeshiPhone } from '../shared/validation';
 
 const defaultSettings = {
   isOnboarded: false,
-  doctorName: 'Dr. Sample Name',
-  degrees: 'MBBS',
-  bmdcReg: 'BMDC Reg. No. 00000',
+  doctorName: '',
+  degrees: '',
+  bmdcReg: '',
   specialty: 'General Physician',
-  chamberName: 'Sample Chamber',
-  chamberAddress: 'Dhaka, Bangladesh',
-  chamberHours: '5:00 PM - 9:00 PM',
-  chamberPhone: '+880 1700-000000',
+  chamberName: '',
+  chamberAddress: '',
+  chamberHours: '',
+  chamberPhone: '',
   consultationFee: null,
   printHeaderMode: 'full' as const,
 };
@@ -45,6 +46,7 @@ export default function PrescriptionPage() {
 
   const {
     name,
+    phone,
     visitDate,
     items,
     isSavingDraft,
@@ -128,7 +130,16 @@ export default function PrescriptionPage() {
     setLastAddedIndex(items.length);
   };
 
+  const isPhoneInvalid =
+    phone.trim().length > 0 && !isValidBangladeshiPhone(phone);
+
   const handleFinalize = async () => {
+    if (isPhoneInvalid) {
+      setErrorMessage(
+        'Please enter a valid 11-digit Bangladeshi mobile number (e.g. 017XXXXXXXX)',
+      );
+      return;
+    }
     setErrorMessage(null);
     setIsFinalizing(true);
     const result = await finalizePrescription();
@@ -434,9 +445,17 @@ export default function PrescriptionPage() {
               <button
                 type="button"
                 onClick={handleFinalize}
-                disabled={!name.trim() || items.length === 0 || isFinalizing}
+                disabled={
+                  !name.trim() ||
+                  items.length === 0 ||
+                  isFinalizing ||
+                  isPhoneInvalid
+                }
                 className={`px-6 py-2.5 rounded-xl font-bold text-white font-heading text-sm flex items-center gap-2.5 shadow-md transition-all cursor-pointer ${
-                  !name.trim() || items.length === 0 || isFinalizing
+                  !name.trim() ||
+                  items.length === 0 ||
+                  isFinalizing ||
+                  isPhoneInvalid
                     ? 'bg-beige-300 text-ink-400 cursor-not-allowed shadow-none'
                     : 'bg-gold-500 hover:bg-gold-600 active:scale-98 text-white'
                 }`}

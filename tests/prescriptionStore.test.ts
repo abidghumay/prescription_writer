@@ -91,6 +91,31 @@ describe('usePrescriptionStore', () => {
     const resultNoItems = await store.finalizePrescription();
     expect(resultNoItems.success).toBe(false);
     expect(resultNoItems.error).toContain('medicine is required');
+
+    // Phone validation
+    store.updatePatient({ phone: '12345' });
+    const resultInvalidPhone = await store.finalizePrescription();
+    expect(resultInvalidPhone.success).toBe(false);
+    expect(resultInvalidPhone.error).toContain(
+      'valid 11-digit Bangladeshi mobile number',
+    );
+    store.updatePatient({ phone: '01711223344' });
+
+    // Age validation
+    store.updatePatient({ ageYears: -5 });
+    const resultNegativeAge = await store.finalizePrescription();
+    expect(resultNegativeAge.success).toBe(false);
+    expect(resultNegativeAge.error).toContain('Age cannot be negative');
+    store.updatePatient({ ageYears: 25 });
+
+    // Weight validation
+    store.updatePatient({ weightKg: 0 });
+    const resultZeroWeight = await store.finalizePrescription();
+    expect(resultZeroWeight.success).toBe(false);
+    expect(resultZeroWeight.error).toContain(
+      'Weight must be greater than 0 kg',
+    );
+    store.updatePatient({ weightKg: 60 });
   });
 
   it('successfully creates patient and prescription via window.api', async () => {
@@ -208,6 +233,30 @@ describe('usePrescriptionStore', () => {
   });
 
   it('calls next token in chamber queue and updates patient name', () => {
+    usePrescriptionStore.setState({
+      tokens: [
+        {
+          id: 1,
+          token_number: 1,
+          patient_name: 'Patient One',
+          phone: '01711111111',
+          age: '30y',
+          status: 'in_consultation',
+          time_in: '10:00 AM',
+        },
+        {
+          id: 2,
+          token_number: 2,
+          patient_name: 'Patient Two',
+          phone: '01722222222',
+          age: '25y',
+          status: 'waiting',
+          time_in: '10:15 AM',
+        },
+      ],
+      activeTokenId: 1,
+    });
+
     const store = usePrescriptionStore.getState();
     expect(store.tokens[0].status).toBe('in_consultation');
     expect(store.tokens[1].status).toBe('waiting');

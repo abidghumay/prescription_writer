@@ -2,6 +2,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import { UserCheck, UserPlus, X, Search } from 'lucide-react';
 import { usePrescriptionStore } from '../store/usePrescriptionStore';
 import type { Patient } from '../shared/types';
+import {
+  isValidBangladeshiPhone,
+  sanitizeAgeYears,
+  sanitizeAgeMonths,
+  sanitizeWeightKg,
+} from '../shared/validation';
 
 export default function PatientBanner() {
   const {
@@ -174,7 +180,7 @@ export default function PatientBanner() {
           {/* Age (col-span-3) */}
           <div className="col-span-3">
             <label className="block text-xs font-semibold text-ink-700 mb-1.5">
-              Age
+              Age (Years & Months)
             </label>
             <div className="h-11 flex items-center gap-2 bg-ivory-50 border border-beige-300 rounded-xl px-3 focus-within:border-gold-600 transition-all">
               <input
@@ -182,14 +188,13 @@ export default function PatientBanner() {
                 min="0"
                 max="130"
                 value={ageYears ?? ''}
-                onChange={(e) =>
-                  updatePatient({
-                    ageYears:
-                      e.target.value === ''
-                        ? null
-                        : parseInt(e.target.value, 10),
-                  })
-                }
+                onKeyDown={(e) => {
+                  if (e.key === '-' || e.key === 'e' || e.key === '.')
+                    e.preventDefault();
+                }}
+                onChange={(e) => {
+                  updatePatient({ ageYears: sanitizeAgeYears(e.target.value) });
+                }}
                 placeholder="Yrs"
                 className="w-full text-sm bg-transparent focus:outline-none font-mono text-center text-ink-900 placeholder-ink-400"
               />
@@ -200,14 +205,15 @@ export default function PatientBanner() {
                 min="0"
                 max="11"
                 value={ageMonths ?? ''}
-                onChange={(e) =>
+                onKeyDown={(e) => {
+                  if (e.key === '-' || e.key === 'e' || e.key === '.')
+                    e.preventDefault();
+                }}
+                onChange={(e) => {
                   updatePatient({
-                    ageMonths:
-                      e.target.value === ''
-                        ? null
-                        : parseInt(e.target.value, 10),
-                  })
-                }
+                    ageMonths: sanitizeAgeMonths(e.target.value),
+                  });
+                }}
                 placeholder="Mo"
                 className="w-full text-sm bg-transparent focus:outline-none font-mono text-center text-ink-900 placeholder-ink-400"
               />
@@ -240,44 +246,61 @@ export default function PatientBanner() {
 
           {/* Phone (col-span-3) */}
           <div className="col-span-3">
-            <label className="block text-xs font-semibold text-ink-700 mb-1.5">
-              Phone Number
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-xs font-semibold text-ink-700">
+                BD Mobile Number
+              </label>
+              {phone.trim() &&
+                (isValidBangladeshiPhone(phone) ? (
+                  <span className="text-[10px] text-emerald-700 font-semibold">
+                    ✓ Valid BD
+                  </span>
+                ) : (
+                  <span className="text-[10px] text-rose-600 font-semibold">
+                    ⚠ 11 digits
+                  </span>
+                ))}
+            </div>
             <input
-              type="text"
+              type="tel"
               value={phone}
               onChange={(e) => {
+                const cleaned = e.target.value.replace(/[^\d+\s-]/g, '');
                 setSearchTarget('phone');
-                updatePatient({ phone: e.target.value, patientId: null });
+                updatePatient({ phone: cleaned, patientId: null });
               }}
               onFocus={() => {
                 setSearchTarget('phone');
                 if (searchResults.length > 0 && !patientId) setIsOpen(true);
               }}
               onKeyDown={handleKeyDown}
-              placeholder="017XXXXXXXX"
-              className="w-full h-11 px-3.5 text-sm bg-ivory-50 border border-beige-300 rounded-xl focus:outline-none focus:border-gold-600 focus:ring-1 focus:ring-gold-500/30 font-mono text-ink-900 placeholder-ink-400 transition-all"
+              placeholder="e.g. 01712345678"
+              className={`w-full h-11 px-3.5 text-sm bg-ivory-50 border rounded-xl focus:outline-none focus:ring-1 font-mono text-ink-900 placeholder-ink-400 transition-all ${
+                phone.trim() && !isValidBangladeshiPhone(phone)
+                  ? 'border-rose-400 focus:border-rose-600 focus:ring-rose-500/20 bg-rose-50/30'
+                  : 'border-beige-300 focus:border-gold-600 focus:ring-gold-500/30'
+              }`}
             />
           </div>
 
           {/* Weight (col-span-3) */}
           <div className="col-span-3">
             <label className="block text-xs font-semibold text-ink-700 mb-1.5">
-              Body Weight
+              Body Weight (kg)
             </label>
             <div className="h-11 flex items-center justify-between bg-ivory-50 border border-beige-300 rounded-xl px-3.5 focus-within:border-gold-600 transition-all">
               <input
                 type="number"
-                step="0.5"
-                min="0"
+                step="0.1"
+                min="0.1"
                 max="300"
                 value={weightKg ?? ''}
-                onChange={(e) =>
-                  updatePatient({
-                    weightKg:
-                      e.target.value === '' ? null : parseFloat(e.target.value),
-                  })
-                }
+                onKeyDown={(e) => {
+                  if (e.key === '-' || e.key === 'e') e.preventDefault();
+                }}
+                onChange={(e) => {
+                  updatePatient({ weightKg: sanitizeWeightKg(e.target.value) });
+                }}
                 placeholder="e.g. 65"
                 className="w-full text-sm bg-transparent focus:outline-none font-mono text-ink-900 placeholder-ink-400"
               />

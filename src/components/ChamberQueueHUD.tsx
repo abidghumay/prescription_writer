@@ -6,6 +6,10 @@ export default function ChamberQueueHUD() {
   const { tokens, activeTokenId, callNextToken, selectToken } =
     usePrescriptionStore();
 
+  if (!tokens || tokens.length === 0) {
+    return null;
+  }
+
   const activeToken = tokens.find((t) => t.id === activeTokenId);
   const waitingTokens = tokens.filter((t) => t.status === 'waiting');
   const completedTokens = tokens.filter((t) => t.status === 'completed');
