@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { X, History, Copy, Calendar, Stethoscope } from 'lucide-react';
+import { X, History, Copy, Calendar, Stethoscope, Clock } from 'lucide-react';
 import { usePrescriptionStore } from '../store/usePrescriptionStore';
 import type { Prescription } from '../shared/types';
 import { animateDrawer } from '../shared/animations';
@@ -17,6 +17,18 @@ export default function PatientHistoryDrawer() {
   const [historyList, setHistoryList] = useState<Prescription[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
+
+  // Close on Escape key
+  useEffect(() => {
+    if (!isHistoryDrawerOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setHistoryDrawerOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isHistoryDrawerOpen, setHistoryDrawerOpen]);
 
   // Fetch past prescriptions for this patient
   useEffect(() => {
@@ -51,7 +63,12 @@ export default function PatientHistoryDrawer() {
   if (!isHistoryDrawerOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden flex justify-end bg-stone-900/30 backdrop-blur-xs transition-opacity">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) setHistoryDrawerOpen(false);
+      }}
+      className="fixed inset-0 z-50 overflow-hidden flex justify-end bg-stone-900/30 backdrop-blur-xs transition-opacity"
+    >
       <div
         ref={drawerRef}
         className="w-full max-w-lg bg-ivory-100 h-full shadow-2xl border-l border-beige-300 flex flex-col justify-between"
@@ -98,14 +115,28 @@ export default function PatientHistoryDrawer() {
                 className="bezel-card p-4 bg-white border border-beige-300 rounded-2xl shadow-xs hover:border-gold-300 transition-all space-y-3"
               >
                 <div className="flex items-center justify-between border-b border-beige-200 pb-2.5">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-3.5 h-3.5 text-gold-600" />
-                    <span className="font-bold text-xs text-ink-900">
-                      Visit Date: {rx.visit_date}
-                    </span>
-                    <span className="text-[10px] bg-gold-50 text-gold-700 font-semibold px-2.5 py-0.5 rounded-full border border-gold-200">
-                      Rx #{rx.id}
-                    </span>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-3.5 h-3.5 text-gold-600" />
+                      <span className="font-bold text-xs text-ink-900">
+                        Visit Date: {rx.visit_date}
+                      </span>
+                      <span className="text-[10px] bg-gold-50 text-gold-700 font-semibold px-2 py-0.5 rounded-full border border-gold-200">
+                        Rx #{rx.id}
+                      </span>
+                    </div>
+                    {rx.created_at && (
+                      <div className="flex items-center gap-1.5 text-[10px] text-ink-500 font-mono mt-0.5 ml-0.5">
+                        <Clock className="w-3 h-3 text-gold-600" />
+                        <span>
+                          Recorded at{' '}
+                          {new Date(rx.created_at).toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   <button

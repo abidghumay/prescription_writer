@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { FileEdit, Search, Users, Settings } from 'lucide-react';
 import type { AppSettings, DatabaseStats } from '../shared/types';
+import { DEFAULT_APP_SETTINGS } from '../shared/types';
 import OnboardingModal from './OnboardingModal';
 
 export interface LayoutContextType {
@@ -12,19 +13,7 @@ export interface LayoutContextType {
 }
 
 export default function Layout() {
-  const [settings, setSettings] = useState<AppSettings>({
-    isOnboarded: false,
-    doctorName: '',
-    degrees: '',
-    bmdcReg: '',
-    specialty: 'General Physician',
-    chamberName: '',
-    chamberAddress: '',
-    chamberHours: '5:00 PM - 9:00 PM',
-    chamberPhone: '',
-    consultationFee: null,
-    printHeaderMode: 'full',
-  });
+  const [settings, setSettings] = useState<AppSettings>(DEFAULT_APP_SETTINGS);
   const [ipcConnected, setIpcConnected] = useState(false);
   const [stats, setStats] = useState<DatabaseStats | null>(null);
 

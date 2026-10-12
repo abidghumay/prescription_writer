@@ -10,6 +10,7 @@ import {
   FileText,
   Sparkles,
   RefreshCw,
+  Clock,
 } from 'lucide-react';
 import type { PastPrescriptionRecord } from '../shared/types';
 import { usePrescriptionStore } from '../store/usePrescriptionStore';
@@ -17,14 +18,23 @@ import { usePrescriptionStore } from '../store/usePrescriptionStore';
 interface PastPrescriptionsViewProps {
   onRepeatPrescription: () => void;
   onOpenPrintModal?: (rx: PastPrescriptionRecord) => void;
+  patientIdFilter?: number | null;
+  patientNameFilter?: string | null;
+  onClearPatientFilter?: () => void;
 }
 
 export default function PastPrescriptionsView({
   onRepeatPrescription,
   onOpenPrintModal,
+  patientIdFilter = null,
+  patientNameFilter = null,
+  onClearPatientFilter,
 }: PastPrescriptionsViewProps) {
   const { repeatPreviousPrescription, updatePatient } = usePrescriptionStore();
 
+  const [effectivePatientId, setEffectivePatientId] = useState<number | null>(
+    patientIdFilter,
+  );
   const [records, setRecords] = useState<PastPrescriptionRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [dateFilter, setDateFilter] = useState<
@@ -33,11 +43,19 @@ export default function PastPrescriptionsView({
   const [isLoading, setIsLoading] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
-  const fetchRecords = async (query = '') => {
+  // Sync internal filter when parent patientIdFilter changes
+  useEffect(() => {
+    setEffectivePatientId(patientIdFilter);
+  }, [patientIdFilter]);
+
+  const fetchRecords = async (query = '', pId: number | null = effectivePatientId) => {
     if (!window.api?.getAllPrescriptions) return;
     setIsLoading(true);
     try {
-      const data = await window.api.getAllPrescriptions(query);
+      const data = await window.api.getAllPrescriptions(
+        query,
+        pId ?? undefined,
+      );
       setRecords(data || []);
     } catch (err) {
       console.error('Failed to load past prescriptions:', err);
@@ -47,8 +65,8 @@ export default function PastPrescriptionsView({
   };
 
   useEffect(() => {
-    fetchRecords(searchQuery);
-  }, [searchQuery]);
+    fetchRecords(searchQuery, effectivePatientId);
+  }, [searchQuery, effectivePatientId]);
 
   // Filter records based on selected date filter
   const filteredRecords = useMemo(() => {
@@ -186,6 +204,31 @@ export default function PastPrescriptionsView({
             ))}
           </div>
         </div>
+
+        {/* Active Patient Filter Banner */}
+        {effectivePatientId && (
+          <div className="flex items-center justify-between p-3 bg-gold-50/90 border border-gold-300 rounded-xl text-xs text-gold-950 shadow-xs">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="font-bold flex items-center gap-1.5 text-gold-800">
+                <User className="w-4 h-4 text-gold-600" />
+                Filtered to Patient: {patientNameFilter || `#${effectivePatientId}`}
+              </span>
+              <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-gold-100 border border-gold-300 text-gold-800 font-semibold">
+                ID #{effectivePatientId} &middot; {filteredRecords.length} visits
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setEffectivePatientId(null);
+                onClearPatientFilter?.();
+              }}
+              className="text-xs font-semibold px-3 py-1 bg-white hover:bg-gold-100 text-gold-800 border border-gold-300 rounded-lg shadow-xs transition-colors cursor-pointer"
+            >
+              Show All Clinic Records
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Prescriptions Feed */}
@@ -259,6 +302,18 @@ export default function PastPrescriptionsView({
                         {rx.visit_date}
                       </span>
                     </span>
+
+                    {rx.created_at && (
+                      <span className="flex items-center gap-1 text-[11px] text-ink-500 font-mono">
+                        <Clock className="w-3 h-3 text-gold-600" />
+                        <span>
+                          {new Date(rx.created_at).toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </span>
+                      </span>
+                    )}
 
                     {rx.weight_kg && (
                       <span className="text-ink-400">

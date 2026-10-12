@@ -25,8 +25,8 @@ const api: IpcApi = {
   getPrescription: (id) => ipcRenderer.invoke('prescriptions:get', id),
   getPatientPrescriptions: (patientId) =>
     ipcRenderer.invoke('prescriptions:get-by-patient', patientId),
-  getAllPrescriptions: (searchQuery) =>
-    ipcRenderer.invoke('prescriptions:get-all', searchQuery),
+  getAllPrescriptions: (searchQuery, patientId) =>
+    ipcRenderer.invoke('prescriptions:get-all', searchQuery, patientId),
   deletePrescription: (id) => ipcRenderer.invoke('prescriptions:delete', id),
 
   // Draft IPC
@@ -38,6 +38,18 @@ const api: IpcApi = {
   saveSettingsToDB: (settings) =>
     ipcRenderer.invoke('settings:save-db', settings),
   loadSettingsFromDB: () => ipcRenderer.invoke('settings:load-db'),
+
+  // Print & PDF IPC
+  printToPdf: (options) => ipcRenderer.invoke('print:to-pdf', options),
+  printSilent: (options) => ipcRenderer.invoke('print:silent', options),
+
+  // Print Profile IPC
+  getPrintProfiles: () => ipcRenderer.invoke('print-profiles:get-all'),
+  savePrintProfile: (profile) =>
+    ipcRenderer.invoke('print-profiles:save', profile),
+  deletePrintProfile: (id) => ipcRenderer.invoke('print-profiles:delete', id),
+  setDefaultPrintProfile: (id) =>
+    ipcRenderer.invoke('print-profiles:set-default', id),
 };
 
 contextBridge.exposeInMainWorld('api', api);

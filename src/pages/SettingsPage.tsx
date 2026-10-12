@@ -8,6 +8,8 @@ import {
   CheckCircle,
   Save,
   RotateCcw,
+  SlidersHorizontal,
+  Ruler,
 } from 'lucide-react';
 import type { LayoutContextType } from '../components/Layout';
 import type { AppSettings } from '../shared/types';
@@ -41,6 +43,8 @@ export default function SettingsPage() {
   const [printHeaderMode, setPrintHeaderMode] = useState<'full' | 'pad_space'>(
     'full',
   );
+  const [padHeaderMarginMm, setPadHeaderMarginMm] = useState(65);
+  const [padFooterMarginMm, setPadFooterMarginMm] = useState(30);
 
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -59,6 +63,8 @@ export default function SettingsPage() {
         settings.consultationFee ? String(settings.consultationFee) : '',
       );
       setPrintHeaderMode(settings.printHeaderMode || 'full');
+      setPadHeaderMarginMm(settings.padHeaderMarginMm ?? 65);
+      setPadFooterMarginMm(settings.padFooterMarginMm ?? 30);
     }
   }, [settings]);
 
@@ -79,6 +85,8 @@ export default function SettingsPage() {
       chamberPhone: chamberPhone.trim(),
       consultationFee: consultationFee ? Number(consultationFee) : null,
       printHeaderMode,
+      padHeaderMarginMm: Number(padHeaderMarginMm) || 65,
+      padFooterMarginMm: Number(padFooterMarginMm) || 30,
     };
 
     try {
@@ -111,7 +119,103 @@ export default function SettingsPage() {
         settings.consultationFee ? String(settings.consultationFee) : '',
       );
       setPrintHeaderMode(settings.printHeaderMode || 'full');
+      setPadHeaderMarginMm(settings.padHeaderMarginMm ?? 65);
+      setPadFooterMarginMm(settings.padFooterMarginMm ?? 30);
     }
+  };
+
+  const handlePrintTestSheet = () => {
+    const printWin = window.open('', '_blank', 'width=800,height=900');
+    if (!printWin) {
+      window.print();
+      return;
+    }
+    printWin.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Pad Margin Calibration Test Sheet</title>
+          <style>
+            @page { size: A4 portrait; margin: 0; }
+            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; background: white; color: #1e293b; }
+            .header-zone {
+              height: ${padHeaderMarginMm}mm;
+              border-bottom: 2px dashed #0284c7;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              background: #f0f9ff;
+              font-size: 13px;
+              font-weight: 700;
+              color: #0369a1;
+              box-sizing: border-box;
+            }
+            .content-zone {
+              padding: 10mm 15mm;
+              box-sizing: border-box;
+            }
+            .content-zone h2 { margin: 0 0 10px 0; color: #0f172a; font-size: 18px; }
+            .content-zone p { margin: 6px 0; font-size: 13px; line-height: 1.5; color: #475569; }
+            .metric-box {
+              margin-top: 15px;
+              padding: 12px;
+              background: #f8fafc;
+              border: 1px solid #e2e8f0;
+              border-radius: 6px;
+              font-size: 12px;
+            }
+            .footer-zone {
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              height: ${padFooterMarginMm}mm;
+              border-top: 2px dashed #0284c7;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background: #f0f9ff;
+              font-size: 12px;
+              font-weight: 600;
+              color: #0369a1;
+              box-sizing: border-box;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="header-zone">
+            <span>▲ Top Reserved Header Margin: ${padHeaderMarginMm} mm ▲</span>
+            <span style="font-size: 11px; font-weight: normal; margin-top: 4px; color: #0284c7;">
+              (This space will be left empty on pre-printed doctor letterheads)
+            </span>
+          </div>
+          <div class="content-zone">
+            <h2>Chamber Letterhead Margin Alignment Test Sheet</h2>
+            <p><strong>Instructions for Doctor:</strong></p>
+            <p>1. Print this sheet and hold it directly over your physical chamber prescription pad against a light source.</p>
+            <p>2. Verify that the dashed blue line clears your embossed/printed letterhead graphics completely.</p>
+            <p>3. If the line cuts through your header, return to Settings and increase the Top Header Margin slider.</p>
+            <div class="metric-box">
+              <div>• Configured Top Margin: <strong>${padHeaderMarginMm} mm</strong></div>
+              <div>• Configured Bottom Margin: <strong>${padFooterMarginMm} mm</strong></div>
+              <div>• Doctor: <strong>${doctorName || 'Dr.'}</strong></div>
+              <div>• Chamber: <strong>${chamberName || 'Practice'}</strong></div>
+            </div>
+          </div>
+          <div class="footer-zone">
+            <span>▼ Bottom Reserved Footer Margin: ${padFooterMarginMm} mm ▼</span>
+          </div>
+          <script>
+            window.onload = function() {
+              window.print();
+              setTimeout(function() { window.close(); }, 500);
+            };
+          </script>
+        </body>
+      </html>
+    `);
+    printWin.document.close();
   };
 
   return (
@@ -194,8 +298,14 @@ export default function SettingsPage() {
               </div>
             </div>
           ) : (
-            <div className="h-16 flex items-center justify-center border-2 border-dashed border-beige-300 rounded-lg text-xs text-ink-400 font-medium">
-              [Top 55mm reserved for pre-printed letterhead pad]
+            <div
+              style={{
+                minHeight: `${Math.max(48, Math.min(120, padHeaderMarginMm * 1.2))}px`,
+              }}
+              className="flex items-center justify-center border-2 border-dashed border-beige-300 rounded-lg text-xs text-ink-400 font-medium transition-all"
+            >
+              [Top {padHeaderMarginMm}mm reserved for pre-printed letterhead
+              pad]
             </div>
           )}
         </div>
@@ -430,6 +540,88 @@ export default function SettingsPage() {
               </p>
             </div>
           </div>
+
+          {/* Interactive Pad Margin Calibrator */}
+          {printHeaderMode === 'pad_space' && (
+            <div className="pt-4 mt-2 border-t border-beige-200 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <SlidersHorizontal className="w-4 h-4 text-gold-600" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-ink-800">
+                    Interactive Pad Margin Calibrator
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={handlePrintTestSheet}
+                  className="px-3 py-1.5 rounded-lg bg-beige-100 hover:bg-gold-50 text-gold-800 border border-beige-300 hover:border-gold-300 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs"
+                >
+                  <Ruler className="w-3.5 h-3.5 text-gold-600" />
+                  <span>Print Alignment Test Sheet</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 p-4 bg-ivory-50 rounded-xl border border-beige-200">
+                {/* Top Margin Slider */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs font-semibold text-ink-800">
+                    <span>Top Header Offset (Reserved Space)</span>
+                    <span className="px-2 py-0.5 rounded bg-gold-100 text-gold-800 font-mono text-xs">
+                      {padHeaderMarginMm} mm
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={20}
+                    max={120}
+                    step={1}
+                    value={padHeaderMarginMm}
+                    onChange={(e) =>
+                      setPadHeaderMarginMm(Number(e.target.value))
+                    }
+                    className="w-full accent-gold-600 cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[10px] text-ink-400 font-mono">
+                    <span>20 mm (Min)</span>
+                    <span>Default: 65 mm</span>
+                    <span>120 mm (Max)</span>
+                  </div>
+                </div>
+
+                {/* Bottom Margin Slider */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs font-semibold text-ink-800">
+                    <span>Bottom Footer Margin</span>
+                    <span className="px-2 py-0.5 rounded bg-gold-100 text-gold-800 font-mono text-xs">
+                      {padFooterMarginMm} mm
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={10}
+                    max={80}
+                    step={1}
+                    value={padFooterMarginMm}
+                    onChange={(e) =>
+                      setPadFooterMarginMm(Number(e.target.value))
+                    }
+                    className="w-full accent-gold-600 cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[10px] text-ink-400 font-mono">
+                    <span>10 mm (Min)</span>
+                    <span>Default: 30 mm</span>
+                    <span>80 mm (Max)</span>
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-[11px] text-ink-500 leading-relaxed italic">
+                💡 Tip: Use a ruler on your physical chamber pad to measure the
+                distance from the top edge to where prescription writing should
+                start. Set that value as your Top Header Offset.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Card 4: Local Database Architecture Info */}

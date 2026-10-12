@@ -12,9 +12,27 @@ export const AppSettingsSchema = z.object({
   chamberPhone: z.string().default(''),
   consultationFee: z.number().nullable().default(null),
   printHeaderMode: z.enum(['full', 'pad_space']).default('full'),
+  padHeaderMarginMm: z.number().min(10).max(150).default(65),
+  padFooterMarginMm: z.number().min(0).max(100).default(30),
 });
 
 export type AppSettings = z.infer<typeof AppSettingsSchema>;
+
+export const DEFAULT_APP_SETTINGS: AppSettings = {
+  isOnboarded: false,
+  doctorName: '',
+  degrees: '',
+  bmdcReg: '',
+  specialty: 'General Physician',
+  chamberName: '',
+  chamberAddress: '',
+  chamberHours: '',
+  chamberPhone: '',
+  consultationFee: null,
+  printHeaderMode: 'full',
+  padHeaderMarginMm: 65,
+  padFooterMarginMm: 30,
+};
 
 export interface BrandSearchResult {
   id: number;
@@ -158,6 +176,7 @@ export interface IpcApi {
   getPatientPrescriptions: (patientId: number) => Promise<Prescription[]>;
   getAllPrescriptions: (
     searchQuery?: string,
+    patientId?: number,
   ) => Promise<PastPrescriptionRecord[]>;
   deletePrescription: (id: number) => Promise<boolean>;
 
@@ -169,6 +188,23 @@ export interface IpcApi {
   // Settings persistence (upgrade from in-memory)
   saveSettingsToDB: (settings: AppSettings) => Promise<boolean>;
   loadSettingsFromDB: () => Promise<AppSettings>;
+
+  // Print & PDF IPC
+  printToPdf: (options: {
+    paperSize: 'a4' | 'a5';
+    suggestedFileName: string;
+  }) => Promise<{ success: boolean; filePath?: string; error?: string }>;
+  printSilent: (options: {
+    paperSize: 'a4' | 'a5';
+  }) => Promise<{ success: boolean; error?: string }>;
+
+  // Print Profile IPC
+  getPrintProfiles: () => Promise<PrintProfile[]>;
+  savePrintProfile: (
+    profile: PrintProfileInput & { id?: number },
+  ) => Promise<PrintProfile>;
+  deletePrintProfile: (id: number) => Promise<boolean>;
+  setDefaultPrintProfile: (id: number) => Promise<boolean>;
 }
 
 // Clinical Templates, Queue, & Printing
@@ -206,12 +242,50 @@ export interface ChamberToken {
   time_in: string;
 }
 
+export interface PrintSectionVisibility {
+  chiefComplaints: boolean;
+  onExamination: boolean;
+  diagnosis: boolean;
+  investigations: boolean;
+  advice: boolean;
+  followUp: boolean;
+  patientPhone: boolean;
+  patientWeight: boolean;
+  consultationFee: boolean;
+}
+
+export interface PrintFontSizes {
+  patientName: number;
+  medicineName: number;
+  doseText: number;
+  clinicalNotes: number;
+  banglaDose: number;
+  header: number;
+}
+
 export interface PrintConfig {
   mode: 'letterhead' | 'blank_pad';
   paperSize: 'a4' | 'a5';
   headerMarginMm: number;
   footerMarginMm: number;
   showBanglaDose: boolean;
+  sections?: PrintSectionVisibility;
+  fontSizes?: PrintFontSizes;
+  logoPath?: string | null;
+}
+
+export interface PrintProfile {
+  id: number;
+  name: string;
+  config: PrintConfig;
+  is_default: boolean;
+  created_at: string;
+}
+
+export interface PrintProfileInput {
+  name: string;
+  config: PrintConfig;
+  is_default?: boolean;
 }
 
 declare global {

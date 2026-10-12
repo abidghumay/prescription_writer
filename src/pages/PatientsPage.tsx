@@ -3,27 +3,14 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import PastPrescriptionsView from '../components/PastPrescriptionsView';
 import PrintStudioModal from '../components/PrintStudioModal';
 import { usePrescriptionStore } from '../store/usePrescriptionStore';
-import type { PastPrescriptionRecord, AppSettings } from '../shared/types';
+import type { PastPrescriptionRecord } from '../shared/types';
+import { DEFAULT_APP_SETTINGS } from '../shared/types';
 import type { LayoutContextType } from '../components/Layout';
-
-const defaultSettings: AppSettings = {
-  isOnboarded: false,
-  doctorName: '',
-  degrees: '',
-  bmdcReg: '',
-  specialty: 'General Physician',
-  chamberName: '',
-  chamberAddress: '',
-  chamberHours: '',
-  chamberPhone: '',
-  consultationFee: null,
-  printHeaderMode: 'full',
-};
 
 export default function PatientsPage() {
   const navigate = useNavigate();
   const context = useOutletContext<LayoutContextType | null>();
-  const settings = context?.settings ?? defaultSettings;
+  const settings = context?.settings ?? DEFAULT_APP_SETTINGS;
 
   const { setPrintStudioOpen, repeatPreviousPrescription, updatePatient } =
     usePrescriptionStore();

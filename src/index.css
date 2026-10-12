@@ -1,3 +1,20 @@
+/* Embedded Bangla font for prescription printing */
+@font-face {
+  font-family: 'Noto Sans Bengali';
+  src: url('./assets/fonts/NotoSansBengali-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Sans Bengali';
+  src: url('./assets/fonts/NotoSansBengali-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -54,4 +71,50 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #c9bfa8;
+}
+
+/* ============================================
+   Print-only styles: hide app chrome, show only paper
+   ============================================ */
+@media print {
+  body {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Hide everything by default */
+  body > #root > * {
+    visibility: hidden !important;
+    position: absolute !important;
+    overflow: hidden !important;
+  }
+
+  /* Show the print area (the paper preview in PrintStudioModal) */
+  .print-area,
+  .print-area * {
+    visibility: visible !important;
+    position: static !important;
+    overflow: visible !important;
+  }
+
+  .print-area {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Hide interactive controls inside print area */
+  .no-print {
+    display: none !important;
+  }
+
+  /* Clean print: no decorative shadows */
+  .print-area .print-clean {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
 }

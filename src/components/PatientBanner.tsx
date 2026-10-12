@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { UserCheck, UserPlus, X, Search } from 'lucide-react';
+import { UserCheck, UserPlus, X, Search, History } from 'lucide-react';
 import { usePrescriptionStore } from '../store/usePrescriptionStore';
 import type { Patient } from '../shared/types';
 import {
@@ -20,6 +20,7 @@ export default function PatientBanner() {
     weightKg,
     updatePatient,
     selectExistingPatient,
+    setHistoryDrawerOpen,
   } = usePrescriptionStore();
 
   const [searchResults, setSearchResults] = useState<Patient[]>([]);
@@ -73,6 +74,7 @@ export default function PatientBanner() {
     selectExistingPatient(p);
     setIsOpen(false);
     setSearchResults([]);
+    setHistoryDrawerOpen(true);
   };
 
   const handleResetPatient = () => {
@@ -125,10 +127,21 @@ export default function PatientBanner() {
             Patient Demographics & Identity
           </span>
           {patientId ? (
-            <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-semibold bg-gold-50 text-gold-700 border border-gold-300 shadow-xs">
-              <UserCheck className="w-3.5 h-3.5 text-gold-600" />
-              Returning Patient #{patientId}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-semibold bg-gold-50 text-gold-700 border border-gold-300 shadow-xs">
+                <UserCheck className="w-3.5 h-3.5 text-gold-600" />
+                Returning Patient #{patientId}
+              </span>
+              <button
+                type="button"
+                onClick={() => setHistoryDrawerOpen(true)}
+                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-xl text-xs font-bold bg-gold-100 hover:bg-gold-200 text-gold-800 border border-gold-300 shadow-xs transition-all cursor-pointer"
+                title="View previous prescription history for this patient"
+              >
+                <History className="w-3.5 h-3.5 text-gold-600" />
+                <span>View Patient History</span>
+              </button>
+            </div>
           ) : (
             <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-medium bg-beige-100 text-ink-600 border border-beige-300">
               <UserPlus className="w-3.5 h-3.5 text-ink-500" />

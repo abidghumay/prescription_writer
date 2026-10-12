@@ -22,29 +22,17 @@ import PastPrescriptionsView from '../components/PastPrescriptionsView';
 import PatientHistoryDrawer from '../components/PatientHistoryDrawer';
 import PrintStudioModal from '../components/PrintStudioModal';
 import type { PastPrescriptionRecord } from '../shared/types';
+import { DEFAULT_APP_SETTINGS } from '../shared/types';
 import { isValidBangladeshiPhone } from '../shared/validation';
-
-const defaultSettings = {
-  isOnboarded: false,
-  doctorName: '',
-  degrees: '',
-  bmdcReg: '',
-  specialty: 'General Physician',
-  chamberName: '',
-  chamberAddress: '',
-  chamberHours: '',
-  chamberPhone: '',
-  consultationFee: null,
-  printHeaderMode: 'full' as const,
-};
 
 export default function PrescriptionPage() {
   const context = useOutletContext<LayoutContextType | null>();
-  const settings = context?.settings ?? defaultSettings;
+  const settings = context?.settings ?? DEFAULT_APP_SETTINGS;
 
   const [activeMode, setActiveMode] = useState<'new' | 'past'>('new');
 
   const {
+    patientId,
     name,
     phone,
     visitDate,
@@ -133,6 +121,20 @@ export default function PrescriptionPage() {
   const isPhoneInvalid =
     phone.trim().length > 0 && !isValidBangladeshiPhone(phone);
 
+  const scrollToTop = () => {
+    const mainContainer = document.querySelector('main');
+    if (mainContainer) {
+      mainContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      const nameInput = document.querySelector(
+        'input[placeholder*="patient name"]',
+      ) as HTMLInputElement | null;
+      nameInput?.focus();
+    }, 150);
+  };
+
   const handleFinalize = async () => {
     if (isPhoneInvalid) {
       setErrorMessage(
@@ -149,6 +151,7 @@ export default function PrescriptionPage() {
       setErrorMessage(result.error || 'Failed to finalize prescription');
     } else {
       setLastAddedIndex(null);
+      scrollToTop();
     }
   };
 
@@ -163,6 +166,7 @@ export default function PrescriptionPage() {
     }
     clearPrescription();
     setErrorMessage(null);
+    scrollToTop();
   };
 
   const handlePrintPastPrescription = (rx: PastPrescriptionRecord) => {
@@ -298,6 +302,16 @@ export default function PrescriptionPage() {
                 <div className="flex items-center gap-2.5">
                   <button
                     type="button"
+                    onClick={handleClear}
+                    className="px-3 py-1.5 text-xs font-semibold text-ink-700 hover:text-ink-900 bg-white hover:bg-beige-100 rounded-xl border border-beige-300 hover:border-gold-400 transition-all flex items-center gap-2 cursor-pointer shadow-xs"
+                    title="Clear current prescription and start fresh"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5 text-ink-500" />
+                    <span>Clear / New Rx</span>
+                  </button>
+
+                  <button
+                    type="button"
                     onClick={() => setActiveMode('past')}
                     className="px-3 py-1.5 text-xs font-semibold text-ink-700 hover:text-gold-700 bg-white hover:bg-beige-100 rounded-xl border border-beige-300 hover:border-gold-400 transition-all flex items-center gap-2 cursor-pointer shadow-xs"
                     title="View previous prescriptions (Ctrl+H)"
@@ -426,15 +440,6 @@ export default function PrescriptionPage() {
             <div className="flex items-center gap-3">
               <button
                 type="button"
-                onClick={handleClear}
-                className="px-4 py-2.5 rounded-xl border border-beige-300 hover:border-gold-300 text-ink-700 hover:bg-beige-50 flex items-center gap-2 font-medium transition-all cursor-pointer shadow-xs"
-              >
-                <RotateCcw className="w-3.5 h-3.5 text-ink-500" />
-                <span>Clear / New Rx</span>
-              </button>
-
-              <button
-                type="button"
                 onClick={() => setPrintStudioOpen(true)}
                 className="px-4 py-2.5 rounded-xl bg-gold-50 hover:bg-gold-100 border border-gold-300 text-gold-800 font-bold flex items-center gap-2 transition-all cursor-pointer shadow-xs"
               >
@@ -475,6 +480,8 @@ export default function PrescriptionPage() {
         <PastPrescriptionsView
           onRepeatPrescription={() => setActiveMode('new')}
           onOpenPrintModal={handlePrintPastPrescription}
+          patientIdFilter={patientId}
+          patientNameFilter={name}
         />
       )}
 

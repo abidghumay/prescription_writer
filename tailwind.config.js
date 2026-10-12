@@ -96,7 +96,7 @@ export default {
       fontFamily: {
         sans: ['Inter', 'Outfit', 'system-ui', 'sans-serif'],
         heading: ['Outfit', 'Inter', 'system-ui', 'sans-serif'],
-        bangla: ['Noto Sans Bengali', 'sans-serif'],
+        bangla: ['"Noto Sans Bengali"', 'sans-serif'],
         mono: [
           'ui-monospace',
           'SFMono-Regular',

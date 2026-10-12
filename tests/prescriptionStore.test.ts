@@ -267,4 +267,71 @@ describe('usePrescriptionStore', () => {
     expect(state.tokens[1].status).toBe('in_consultation');
     expect(state.name).toBe(state.tokens[1].patient_name);
   });
+
+  it('selects existing patient and populates store with patientId', () => {
+    const store = usePrescriptionStore.getState();
+    store.selectExistingPatient({
+      id: 42,
+      name: 'Mohammad Rahim',
+      age_years: 45,
+      age_months: 6,
+      sex: 'M',
+      phone: '01712345678',
+      address: 'Dhaka, Bangladesh',
+      created_at: '2026-10-10T10:00:00Z',
+    });
+
+    const state = usePrescriptionStore.getState();
+    expect(state.patientId).toBe(42);
+    expect(state.name).toBe('Mohammad Rahim');
+    expect(state.ageYears).toBe(45);
+    expect(state.ageMonths).toBe(6);
+    expect(state.sex).toBe('M');
+    expect(state.phone).toBe('01712345678');
+    expect(state.address).toBe('Dhaka, Bangladesh');
+  });
+
+  it('toggles history drawer open state', () => {
+    const store = usePrescriptionStore.getState();
+    expect(store.isHistoryDrawerOpen).toBe(false);
+
+    store.setHistoryDrawerOpen(true);
+    expect(usePrescriptionStore.getState().isHistoryDrawerOpen).toBe(true);
+
+    store.setHistoryDrawerOpen(false);
+    expect(usePrescriptionStore.getState().isHistoryDrawerOpen).toBe(false);
+  });
+
+  it('clearPrescription resets patientId, items, and clinical notes', () => {
+    const store = usePrescriptionStore.getState();
+    store.selectExistingPatient({
+      id: 99,
+      name: 'Test Patient',
+      age_years: 20,
+      age_months: 0,
+      sex: 'F',
+      phone: '01812345678',
+      address: 'Chittagong',
+      created_at: '2026-10-10T10:00:00Z',
+    });
+    store.addItem({
+      brand_id: null,
+      free_text_name: 'Paracetamol',
+      strength_snapshot: null,
+      form_snapshot: null,
+      generic_snapshot: null,
+      dose: '1+0+1',
+      meal_timing: null,
+      duration: null,
+      note: null,
+    });
+    store.updateClinical({ diagnosis: 'Fever' });
+
+    store.clearPrescription();
+    const state = usePrescriptionStore.getState();
+    expect(state.patientId).toBeNull();
+    expect(state.name).toBe('');
+    expect(state.items).toHaveLength(0);
+    expect(state.diagnosis).toBe('');
+  });
 });

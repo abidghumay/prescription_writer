@@ -83,6 +83,8 @@ export default function OnboardingModal({
         chamberPhone: chamberPhone.trim(),
         consultationFee: consultationFee ? Number(consultationFee) : null,
         printHeaderMode,
+        padHeaderMarginMm: 65,
+        padFooterMarginMm: 30,
       };
 
       await onComplete(finalSettings);

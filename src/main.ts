@@ -1,5 +1,6 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog } from 'electron';
 import path from 'node:path';
+import fs from 'node:fs';
 import started from 'electron-squirrel-startup';
 import { AppSettingsSchema } from './shared/types';
 import type {
@@ -12,6 +13,8 @@ import type {
   PrescriptionItem,
   DraftData,
   PastPrescriptionRecord,
+  PrintProfile,
+  PrintProfileInput,
 } from './shared/types';
 import { initDatabase } from './main/db/database';
 import { searchDrugs } from './main/db/search';
@@ -35,6 +38,8 @@ let inMemorySettings: AppSettings = {
   chamberPhone: '',
   consultationFee: null,
   printHeaderMode: 'full',
+  padHeaderMarginMm: 65,
+  padFooterMarginMm: 30,
 };
 
 const setupIpcHandlers = () => {
@@ -61,6 +66,120 @@ const setupIpcHandlers = () => {
   };
   if (countRow.count === 0) {
     importDrugDataset(db, sampleDrugs as any, 'sample', '1.0');
+  }
+
+  // Auto-seed default print profiles if empty
+  try {
+    const profileCountRow = db
+      .prepare('SELECT COUNT(*) as count FROM print_profile')
+      .get() as { count: number };
+    if (profileCountRow.count === 0) {
+      const defaultProfiles = [
+        {
+          name: 'Full Letterhead (A4)',
+          config: {
+            mode: 'letterhead',
+            paperSize: 'a4',
+            headerMarginMm: 65,
+            footerMarginMm: 30,
+            showBanglaDose: true,
+            sections: {
+              chiefComplaints: true,
+              onExamination: true,
+              diagnosis: true,
+              investigations: true,
+              advice: true,
+              followUp: true,
+              patientPhone: true,
+              patientWeight: true,
+              consultationFee: false,
+            },
+            fontSizes: {
+              patientName: 12,
+              medicineName: 12,
+              doseText: 12,
+              clinicalNotes: 11,
+              banglaDose: 10,
+              header: 16,
+            },
+            logoPath: null,
+          },
+          is_default: 1,
+        },
+        {
+          name: 'Pre-Printed Pad (A4)',
+          config: {
+            mode: 'blank_pad',
+            paperSize: 'a4',
+            headerMarginMm: 65,
+            footerMarginMm: 30,
+            showBanglaDose: true,
+            sections: {
+              chiefComplaints: true,
+              onExamination: true,
+              diagnosis: true,
+              investigations: true,
+              advice: true,
+              followUp: true,
+              patientPhone: true,
+              patientWeight: true,
+              consultationFee: false,
+            },
+            fontSizes: {
+              patientName: 12,
+              medicineName: 12,
+              doseText: 12,
+              clinicalNotes: 11,
+              banglaDose: 10,
+              header: 16,
+            },
+            logoPath: null,
+          },
+          is_default: 0,
+        },
+        {
+          name: 'Compact Prescription (A5)',
+          config: {
+            mode: 'letterhead',
+            paperSize: 'a5',
+            headerMarginMm: 45,
+            footerMarginMm: 20,
+            showBanglaDose: true,
+            sections: {
+              chiefComplaints: true,
+              onExamination: true,
+              diagnosis: true,
+              investigations: true,
+              advice: true,
+              followUp: true,
+              patientPhone: true,
+              patientWeight: true,
+              consultationFee: false,
+            },
+            fontSizes: {
+              patientName: 10,
+              medicineName: 10,
+              doseText: 10,
+              clinicalNotes: 9,
+              banglaDose: 9,
+              header: 13,
+            },
+            logoPath: null,
+          },
+          is_default: 0,
+        },
+      ];
+
+      const insertProfileStmt = db.prepare(`
+        INSERT INTO print_profile (name, config_json, is_default)
+        VALUES (?, ?, ?)
+      `);
+      for (const p of defaultProfiles) {
+        insertProfileStmt.run(p.name, JSON.stringify(p.config), p.is_default);
+      }
+    }
+  } catch (err) {
+    console.error('Failed to seed print profiles:', err);
   }
 
   // App & Settings IPC
@@ -419,7 +538,11 @@ const setupIpcHandlers = () => {
 
   ipcMain.handle(
     'prescriptions:get-all',
-    (_event, searchQuery?: string): PastPrescriptionRecord[] => {
+    (
+      _event,
+      searchQuery?: string,
+      patientId?: number | null,
+    ): PastPrescriptionRecord[] => {
       let sql = `
         SELECT 
           p.id, p.patient_id, p.visit_date, p.weight_kg, p.chief_complaints, p.on_examination,
@@ -428,14 +551,26 @@ const setupIpcHandlers = () => {
         FROM prescription p
         JOIN patient pat ON p.patient_id = pat.id
       `;
-      const params: string[] = [];
+      const whereClauses: string[] = [];
+      const params: (string | number)[] = [];
+
+      if (patientId) {
+        whereClauses.push('p.patient_id = ?');
+        params.push(patientId);
+      }
+
       if (searchQuery && searchQuery.trim()) {
         const q = `%${searchQuery.trim()}%`;
-        sql += `
-          WHERE pat.name LIKE ? OR pat.phone LIKE ? OR p.diagnosis LIKE ? OR p.chief_complaints LIKE ?
-        `;
+        whereClauses.push(
+          '(pat.name LIKE ? OR pat.phone LIKE ? OR p.diagnosis LIKE ? OR p.chief_complaints LIKE ?)',
+        );
         params.push(q, q, q, q);
       }
+
+      if (whereClauses.length > 0) {
+        sql += ` WHERE ` + whereClauses.join(' AND ');
+      }
+
       sql += ` ORDER BY p.visit_date DESC, p.id DESC LIMIT 150`;
 
       const rows = db.prepare(sql).all(...params) as Array<
@@ -522,6 +657,167 @@ const setupIpcHandlers = () => {
       return AppSettingsSchema.parse({});
     }
   });
+
+  // Print & PDF IPC
+  ipcMain.handle(
+    'print:to-pdf',
+    async (
+      _event,
+      options: { paperSize: 'a4' | 'a5'; suggestedFileName: string },
+    ) => {
+      const win =
+        BrowserWindow.getFocusedWindow() || BrowserWindow.getAllWindows()[0];
+      if (!win) return { success: false, error: 'No active window found' };
+
+      const { canceled, filePath } = await dialog.showSaveDialog(win, {
+        defaultPath: path.join(
+          app.getPath('documents'),
+          options.suggestedFileName || 'prescription.pdf',
+        ),
+        filters: [{ name: 'PDF Documents', extensions: ['pdf'] }],
+      });
+
+      if (canceled || !filePath) return { success: false, error: 'Cancelled' };
+
+      try {
+        const pdfData = await win.webContents.printToPDF({
+          pageSize: options.paperSize === 'a5' ? 'A5' : 'A4',
+          printBackground: true,
+          margins: { top: 0, bottom: 0, left: 0, right: 0 },
+          landscape: false,
+        });
+
+        await fs.promises.writeFile(filePath, pdfData);
+        return { success: true, filePath };
+      } catch (err: unknown) {
+        const msg =
+          err instanceof Error ? err.message : 'Failed to generate PDF';
+        return { success: false, error: msg };
+      }
+    },
+  );
+
+  ipcMain.handle(
+    'print:silent',
+    async (_event, options: { paperSize: 'a4' | 'a5' }) => {
+      const win =
+        BrowserWindow.getFocusedWindow() || BrowserWindow.getAllWindows()[0];
+      if (!win) return { success: false, error: 'No active window found' };
+
+      return new Promise((resolve) => {
+        win.webContents.print(
+          {
+            silent: true,
+            printBackground: true,
+            pageSize: options.paperSize === 'a5' ? 'A5' : 'A4',
+            margins: { marginType: 'none' },
+          },
+          (success, failureReason) => {
+            if (!success) {
+              resolve({
+                success: false,
+                error: failureReason || 'Printing failed',
+              });
+            } else {
+              resolve({ success: true });
+            }
+          },
+        );
+      });
+    },
+  );
+
+  // Print Profile IPC
+  ipcMain.handle('print-profiles:get-all', (): PrintProfile[] => {
+    const rows = db
+      .prepare(
+        'SELECT id, name, config_json, is_default, created_at FROM print_profile ORDER BY is_default DESC, name ASC',
+      )
+      .all() as Array<{
+      id: number;
+      name: string;
+      config_json: string;
+      is_default: number;
+      created_at: string;
+    }>;
+    return rows.map((r) => ({
+      id: r.id,
+      name: r.name,
+      config: JSON.parse(r.config_json),
+      is_default: Boolean(r.is_default),
+      created_at: r.created_at,
+    }));
+  });
+
+  ipcMain.handle(
+    'print-profiles:save',
+    (
+      _event,
+      profileInput: PrintProfileInput & { id?: number },
+    ): PrintProfile => {
+      if (profileInput.is_default) {
+        db.prepare('UPDATE print_profile SET is_default = 0').run();
+      }
+
+      if (profileInput.id) {
+        db.prepare(`
+          UPDATE print_profile
+          SET name = ?, config_json = ?, is_default = ?
+          WHERE id = ?
+        `).run(
+          profileInput.name,
+          JSON.stringify(profileInput.config),
+          profileInput.is_default ? 1 : 0,
+          profileInput.id,
+        );
+        return {
+          id: profileInput.id,
+          name: profileInput.name,
+          config: profileInput.config,
+          is_default: Boolean(profileInput.is_default),
+          created_at: new Date().toISOString(),
+        };
+      } else {
+        const result = db
+          .prepare(`
+          INSERT INTO print_profile (name, config_json, is_default)
+          VALUES (?, ?, ?)
+          ON CONFLICT(name) DO UPDATE SET
+            config_json = excluded.config_json,
+            is_default = excluded.is_default
+        `)
+          .run(
+            profileInput.name,
+            JSON.stringify(profileInput.config),
+            profileInput.is_default ? 1 : 0,
+          );
+        const id = Number(result.lastInsertRowid);
+        return {
+          id,
+          name: profileInput.name,
+          config: profileInput.config,
+          is_default: Boolean(profileInput.is_default),
+          created_at: new Date().toISOString(),
+        };
+      }
+    },
+  );
+
+  ipcMain.handle('print-profiles:delete', (_event, id: number): boolean => {
+    const result = db.prepare('DELETE FROM print_profile WHERE id = ?').run(id);
+    return result.changes > 0;
+  });
+
+  ipcMain.handle(
+    'print-profiles:set-default',
+    (_event, id: number): boolean => {
+      db.prepare('UPDATE print_profile SET is_default = 0').run();
+      const result = db
+        .prepare('UPDATE print_profile SET is_default = 1 WHERE id = ?')
+        .run(id);
+      return result.changes > 0;
+    },
+  );
 };
 
 const createWindow = () => {
