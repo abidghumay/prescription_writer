@@ -11,6 +11,7 @@ import type {
   PrescriptionInput,
   PrescriptionItem,
   DraftData,
+  PastPrescriptionRecord,
 } from './shared/types';
 import { initDatabase } from './main/db/database';
 import { searchDrugs } from './main/db/search';
@@ -415,6 +416,53 @@ const setupIpcHandlers = () => {
       }));
     },
   );
+
+  ipcMain.handle(
+    'prescriptions:get-all',
+    (_event, searchQuery?: string): PastPrescriptionRecord[] => {
+      let sql = `
+        SELECT 
+          p.id, p.patient_id, p.visit_date, p.weight_kg, p.chief_complaints, p.on_examination,
+          p.diagnosis, p.investigations, p.advice, p.follow_up, p.status, p.created_at, p.finalized_at,
+          pat.name as patient_name, pat.phone as patient_phone, pat.age_years as patient_age_years, pat.sex as patient_sex
+        FROM prescription p
+        JOIN patient pat ON p.patient_id = pat.id
+      `;
+      const params: string[] = [];
+      if (searchQuery && searchQuery.trim()) {
+        const q = `%${searchQuery.trim()}%`;
+        sql += `
+          WHERE pat.name LIKE ? OR pat.phone LIKE ? OR p.diagnosis LIKE ? OR p.chief_complaints LIKE ?
+        `;
+        params.push(q, q, q, q);
+      }
+      sql += ` ORDER BY p.visit_date DESC, p.id DESC LIMIT 150`;
+
+      const rows = db.prepare(sql).all(...params) as Array<
+        Omit<PastPrescriptionRecord, 'items'>
+      >;
+      const getItemStmt = db.prepare(`
+        SELECT id, position, brand_id, free_text_name, strength_snapshot,
+               form_snapshot, generic_snapshot, dose, meal_timing, duration, note
+        FROM prescription_item
+        WHERE prescription_id = ?
+        ORDER BY position ASC
+      `);
+
+      return rows.map((r) => ({
+        ...r,
+        items: getItemStmt.all(r.id) as PrescriptionItem[],
+      }));
+    },
+  );
+
+  ipcMain.handle('prescriptions:delete', (_event, id: number): boolean => {
+    db.prepare('DELETE FROM prescription_item WHERE prescription_id = ?').run(
+      id,
+    );
+    const res = db.prepare('DELETE FROM prescription WHERE id = ?').run(id);
+    return res.changes > 0;
+  });
 
   // Draft IPC
   ipcMain.handle('draft:save', (_event, draft: DraftData): boolean => {

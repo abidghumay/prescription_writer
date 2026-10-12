@@ -1,15 +1,53 @@
 import React from 'react';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import PastPrescriptionsView from '../components/PastPrescriptionsView';
+import PrintStudioModal from '../components/PrintStudioModal';
+import { usePrescriptionStore } from '../store/usePrescriptionStore';
+import type { PastPrescriptionRecord, AppSettings } from '../shared/types';
+import type { LayoutContextType } from '../components/Layout';
+
+const defaultSettings: AppSettings = {
+  isOnboarded: false,
+  doctorName: 'Dr. Sample Name',
+  degrees: 'MBBS',
+  bmdcReg: 'BMDC Reg. No. 00000',
+  specialty: 'General Physician',
+  chamberName: 'Sample Chamber',
+  chamberAddress: 'Dhaka, Bangladesh',
+  chamberHours: '5:00 PM - 9:00 PM',
+  chamberPhone: '+880 1700-000000',
+  consultationFee: null,
+  printHeaderMode: 'full',
+};
 
 export default function PatientsPage() {
+  const navigate = useNavigate();
+  const context = useOutletContext<LayoutContextType | null>();
+  const settings = context?.settings ?? defaultSettings;
+
+  const { setPrintStudioOpen, repeatPreviousPrescription, updatePatient } =
+    usePrescriptionStore();
+
+  const handlePrint = (rx: PastPrescriptionRecord) => {
+    updatePatient({
+      patientId: rx.patient_id,
+      name: rx.patient_name,
+      phone: rx.patient_phone || '',
+      ageYears: rx.patient_age_years,
+      sex: rx.patient_sex,
+      weightKg: rx.weight_kg,
+    });
+    repeatPreviousPrescription(rx);
+    setPrintStudioOpen(true);
+  };
+
   return (
-    <div className="max-w-4xl mx-auto bg-white border border-slate-200 shadow-sm rounded-xl p-8 min-h-[500px] flex items-center justify-center">
-      <div className="text-center">
-        <div className="w-12 h-12 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center mx-auto mb-3 font-semibold text-lg">
-          👥
-        </div>
-        <h2 className="text-lg font-bold text-slate-800">Patient Records</h2>
-        <p className="text-sm text-slate-500 mt-1">Coming in Phase 4</p>
-      </div>
+    <div className="max-w-7xl mx-auto space-y-6">
+      <PastPrescriptionsView
+        onRepeatPrescription={() => navigate('/')}
+        onOpenPrintModal={handlePrint}
+      />
+      <PrintStudioModal settings={settings} />
     </div>
   );
 }

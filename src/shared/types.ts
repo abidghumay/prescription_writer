@@ -130,6 +130,13 @@ export interface DraftData {
   saved_at: string;
 }
 
+export interface PastPrescriptionRecord extends Prescription {
+  patient_name: string;
+  patient_phone: string | null;
+  patient_age_years: number | null;
+  patient_sex: 'M' | 'F' | 'O' | null;
+}
+
 export interface IpcApi {
   ping: () => Promise<string>;
   getAppVersion: () => Promise<string>;
@@ -149,6 +156,10 @@ export interface IpcApi {
   finalizePrescription: (id: number) => Promise<boolean>;
   getPrescription: (id: number) => Promise<Prescription | null>;
   getPatientPrescriptions: (patientId: number) => Promise<Prescription[]>;
+  getAllPrescriptions: (
+    searchQuery?: string,
+  ) => Promise<PastPrescriptionRecord[]>;
+  deletePrescription: (id: number) => Promise<boolean>;
 
   // Draft IPC
   saveDraft: (draft: DraftData) => Promise<boolean>;

@@ -25,6 +25,9 @@ const api: IpcApi = {
   getPrescription: (id) => ipcRenderer.invoke('prescriptions:get', id),
   getPatientPrescriptions: (patientId) =>
     ipcRenderer.invoke('prescriptions:get-by-patient', patientId),
+  getAllPrescriptions: (searchQuery) =>
+    ipcRenderer.invoke('prescriptions:get-all', searchQuery),
+  deletePrescription: (id) => ipcRenderer.invoke('prescriptions:delete', id),
 
   // Draft IPC
   saveDraft: (draft) => ipcRenderer.invoke('draft:save', draft),
